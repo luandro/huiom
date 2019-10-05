@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Any copyright is dedicated to the Public Domain.
+# http://creativecommons.org/publicdomain/zero/1.0/
+
+set -eEu -o pipefail
+shopt -s extdebug
+IFS=$'\n\t'
+trap 'onFailure $?' ERR
+
+function onFailure() {
+  echo "Unhandled script error $1 at ${BASH_SOURCE[0]}:${BASH_LINENO[0]}" >&2
+  exit 1
+}
+
+# echo "Compiling TypeScript...";
+# npm run lib;
+
+echo "Setting up...";
+mkdir -p ./nodejs-assets;
+rm -rf ./nodejs-assets/nodejs-project;
+if [ -f ./nodejs-assets/BUILD_NATIVE_MODULES.txt ]
+then
+  echo "Build Native Modules on";
+else
+  echo '1' >./nodejs-assets/BUILD_NATIVE_MODULES.txt;
+  echo "Set Build Native Modules on";
+fi
+cp -r ./src/backend ./nodejs-assets;
+mv ./nodejs-assets/backend ./nodejs-assets/nodejs-project;
+cp ./src/backend/package.json ./nodejs-assets/nodejs-project;
+cp ./src/backend/package-lock.json ./nodejs-assets/nodejs-project;
+# rm ./nodejs-assets/nodejs-project/*.js.map;
+# rm ./nodejs-assets/nodejs-project/plugins/*.js.map;
+
+echo "Installing dependencies...";
+cd ./nodejs-assets/nodejs-project && npm install --no-optional --offline;
+
+# For more details on this, read issue #398:
+echo "Removing problematic transitive dependencies...";
+rm -rf node_modules/resolve/test;
+rm -rf node_modules/noderify/node_modules/resolve/test;
+cd ../..;
+# cd node_modules && rm -rf chokidar fsevents && cd ../../..;
+
+echo "Updating package-lock.json";
+cp ./nodejs-assets/nodejs-project/package-lock.json ./src/backend/package-lock.json
+
+echo "Patch (in preprocessor style) some dependencies...";
+./src/tools/patch-backend ./nodejs-assets/nodejs-project;
+
+echo "Done.";
