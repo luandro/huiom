@@ -28,6 +28,8 @@ export default class Recording extends Component {
   }
 
   render () {
+    console.log(this.props)
+    const { onCancel, onPublish } = this.props
     return (
       <View style={{ flexGrow: 1 }}>
         <View style={{ flexGrow: 1 }}>
@@ -41,12 +43,12 @@ export default class Recording extends Component {
           <Button
             disabled={this.state.isRecording}
             title='Cancel'
-            onPress={() => this.props.onCancel(this.state.fileData)}
+            onPress={() => onCancel(this.state.fileData)}
           />
           <Button
             title='Publish'
             disabled={!this.state.fileData}
-            onPress={() => this.props.onPublish(this.state.fileData)}
+            onPress={() => onPublish(this.state.fileData)}
           />
         </View>
       </View>

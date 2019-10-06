@@ -18,17 +18,20 @@ export default class Feed extends Component {
       prevProps.replicatedAt !== this.props.replicatedAt ||
       prevProps.feedUpdatedAt !== this.props.feedUpdatedAt
     ) {
+      console.log('Lets get feed')
       // Dirty hack to update
       getFeed()
     }
   }
   render () {
+    const { navigation } = this.props
+    const { isLoading, feed } = this.state
     return (
       <View style={{ flex: 1, width: '100%' }}>
         <FlatList
-          refreshing={this.state.isLoading}
+          refreshing={isLoading}
           onRefresh={this.handleRefresh}
-          data={this.state.feed}
+          data={feed}
           renderItem={({ item }) => {
             const { author, authorName, content, timestamp } = item.value
             return (
@@ -44,7 +47,7 @@ export default class Feed extends Component {
           style={{ padding: 10 }}
           keyExtractor={(item, index) => item.key}
         />
-        <ActionButton />
+        <ActionButton action={() => navigation.navigate('Record')} />
       </View>
     )
   }

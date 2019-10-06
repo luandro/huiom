@@ -1,19 +1,20 @@
 const bridge = require('rn-bridge')
 const pull = require('pull-stream')
 const pullParaMap = require('pull-paramap')
+const toUrl = require('ssb-serve-blobs/id-to-url')
 
 module.exports = sbot => {
   // Replication updates
   pull(
     sbot.replicate.changes(),
     pull.drain(data => {
-      console.log('CHANGES', data)
+      // console.log('CHANGES', data)
       commit({ type: 'replication', payload: data })
     })
   )
 
   // Peers we're connected / connecting / disconnecting from (current state)
-  pull(
+  pull( 
     sbot.conn.peers(),
     pull.asyncMap((peers, cb) => {
       // go through the peers array and fetches 'name' for each peer
@@ -21,10 +22,9 @@ module.exports = sbot => {
         pull.values(peers),
         pullParaMap(
           (peer, cb) => {
-            getName(peer[1].key, (err, name) => {
+            getImage(peer[1].key, (err, image) => {
               if (err) return cb(err)
-
-              peer[1].name = name
+              peer[1].image = toUrl(image)
               cb(null, peer)
             })
           },
@@ -52,8 +52,8 @@ module.exports = sbot => {
     })
   )
 
-  function getName (feedId, cb) {
-    sbot.about.socialValue({ key: 'name', dest: feedId }, cb)
+  function getImage (feedId, cb) {
+    sbot.about.socialValue({ key: 'image', dest: feedId }, cb)
   }
 }
 
