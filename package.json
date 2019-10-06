@@ -18,8 +18,8 @@
     "@react-navigation/native": "^5.0.0-alpha.8",
     "@react-navigation/stack": "^5.0.0-alpha.17",
     "nodejs-mobile-react-native": "^0.5.0",
-    "react": "16.8.6",
-    "react-native": "0.60.5",
+    "react": "16.10.2",
+    "react-native": "0.61.2",
     "react-native-action-button": "^2.8.5",
     "react-native-audio": "^4.3.0",
     "react-native-ffmpeg": "^0.2.1",
@@ -29,15 +29,15 @@
     "react-native-track-player": "git://github.com/react-native-kit/react-native-track-player.git#97692c6894c5ffaae9ad5772c4db0e24c420ac0d"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/runtime": "^7.6.0",
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
     "@react-native-community/eslint-config": "^0.0.5",
     "babel-jest": "^24.9.0",
-    "eslint": "^6.4.0",
+    "eslint": "^6.5.1",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.56.0",
     "react-native-make": "^1.0.1",
-    "react-test-renderer": "16.8.6",
+    "react-test-renderer": "16.10.2",
     "standard": "^14.3.1"
   },
   "jest": {

@@ -90,7 +90,7 @@ export default class App extends Component {
               ),
               headerRight: () => (
                 <Switch
-                  onChange={() => alert('Hello')}
+                  onChange={e => alert('Hello', e)}
                   thumbColor='#000'
                   trackColor='#f1f1'
                 />
