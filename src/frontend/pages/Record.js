@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text, Button } from 'react-native'
+import { View } from 'react-native'
 import Recorder from '../components/Recorder'
+import Button from '../components/Button'
 
 export default class Recording extends Component {
   state = {
@@ -27,30 +28,36 @@ export default class Recording extends Component {
     })
   }
 
+  componentWillUnmount () {
+    // Cancel
+    // onCancel(this.props.fileData)
+  }
+
   render () {
     console.log(this.props)
     const { onCancel, onPublish } = this.props
+    const { fileData, isRecording } = this.state
     return (
-      <View style={{ flexGrow: 1 }}>
-        <View style={{ flexGrow: 1 }}>
+      <View style={{ flexGrow: 4 }}>
+        <View style={{ flexGrow: 3 }}>
           <Recorder
             setRecordedFile={this.setRecordedFile}
             setRecording={this.setRecording}
-            isRecording={this.state.isRecording}
+            isRecording={isRecording}
           />
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        {<View style={{ flexGrow: 1, flexDirection: 'row', justifyContent: 'space-around', opacity: fileData ? 1 : 0 }}>
           <Button
-            disabled={this.state.isRecording}
+            disabled={isRecording}
             title='Cancel'
-            onPress={() => onCancel(this.state.fileData)}
+            onPress={() => onCancel(fileData)}
           />
           <Button
             title='Publish'
-            disabled={!this.state.fileData}
-            onPress={() => onPublish(this.state.fileData)}
+            disabled={!fileData}
+            onPress={() => onPublish(fileData)}
           />
-        </View>
+        </View>}
       </View>
     )
   }

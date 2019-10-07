@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, TouchableHighlight } from 'react-native'
+import colors from '../lib/colors'
 
 export default function RecButton ({ startRecording, stopRecording, active }) {
   var boxStyle = active ? styles.activeButton : styles.deactiveButton
@@ -28,7 +29,7 @@ var styles = StyleSheet.create({
     fontSize: 20,
     height: 70,
     width: 70,
-    backgroundColor: 'red',
+    backgroundColor: colors.color1,
     borderRadius: 70
   },
   activeButton: {
@@ -36,6 +37,6 @@ var styles = StyleSheet.create({
     color: '#B81F00',
     height: 70,
     width: 70,
-    backgroundColor: 'black'
+    backgroundColor: colors.color2
   }
 })

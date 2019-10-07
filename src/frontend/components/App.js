@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { dispatch } from '../lib/utils'
 import Feed from '../pages/Feed'
 import Record from '../pages/Record'
+import { getFeed } from '../lib/utils' // SHOULD BE ON FEED COMPONENT
 
 const Stack = createStackNavigator()
 
@@ -43,6 +44,15 @@ export default class App extends Component {
       // redirect to profile
     }
     // console.log('PROFILE', prevState.profile)
+    // SHOULD BE ON FEED COMPONENT
+    if (
+      prevState.replicatedAt !== this.state.replicatedAt ||
+      prevState.feedUpdatedAt !== this.state.feedUpdatedAt
+    ) {
+      console.log('Lets get feed')
+      // Dirty hack to update
+      getFeed()
+    }
   }
 
   reducer ({ type, payload }) {
@@ -79,10 +89,9 @@ export default class App extends Component {
   }
   render () {
     const { server, feed, connectedPeers, stagedPeers, replication } = this.state
-    // console.log('FEED', feed)
+    console.log('FEED', feed)
     // console.log('REPLICATION', replication)
     return (
-      // <Text>{connectedPeers && connectedPeers[0] && connectedPeers[0][1] && connectedPeers[0][1].image}</Text>
       <NavigationNativeContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -93,7 +102,7 @@ export default class App extends Component {
               headerLeft: () => (
                 <View style={{ paddingLeft: 15 }}>
                   {connectedPeers && connectedPeers.map(peer => {
-                    return <Image key={peer[1].key} source={{ uri: peer[1].image}} style={{ height: 50, width: 50, borderRadius: 25, borderWidth: 4, borderColor: 'green' }} />
+                    return <Image key={peer[1].key} source={{ uri: peer[1].image}} style={{ height: 50, width: 50, borderRadius: 25, borderWidth: 0, borderColor: 'green' }} />
                   })}
                 </View>
               ),
@@ -115,7 +124,13 @@ export default class App extends Component {
               )
             }}
           />
-          <Stack.Screen name='Record' component={Record} />
+          <Stack.Screen
+            name='Record'
+            component={Record}
+            options={{
+              headerTitle: '',
+            }}
+          />
         </Stack.Navigator>
       </NavigationNativeContainer>
     )

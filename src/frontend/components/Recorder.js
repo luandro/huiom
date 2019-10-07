@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-
 import {
   StyleSheet,
   Text,
@@ -7,7 +6,6 @@ import {
   Platform
   // PermissionsAndroid
 } from 'react-native'
-
 import { AudioRecorder, AudioUtils } from 'react-native-audio'
 import TrackPlayer from 'react-native-track-player'
 import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg'
@@ -29,8 +27,8 @@ class Recorder extends Component {
     }
   }
 
-  prepareRecordingPath (audioPath) {
-    AudioRecorder.prepareRecordingAtPath(audioPath, {
+  async prepareRecordingPath (audioPath) {
+    await AudioRecorder.prepareRecordingAtPath(audioPath, {
       SampleRate: 22050,
       Channels: 1,
       AudioQuality: 'Low',
@@ -40,12 +38,12 @@ class Recorder extends Component {
   }
 
   componentDidMount () {
-    AudioRecorder.requestAuthorization().then(isAuthorised => {
+    AudioRecorder.requestAuthorization().then(async isAuthorised => {
       this.setState({ hasPermission: isAuthorised })
 
       if (!isAuthorised) return
 
-      this.prepareRecordingPath(this.state.audioPath)
+      await this.prepareRecordingPath(this.state.audioPath)
 
       AudioRecorder.onProgress = data => {
         this.setState({ currentTime: data.currentTime })

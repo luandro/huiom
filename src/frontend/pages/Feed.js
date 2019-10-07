@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import FeedItem from '../components/FeedItem'
 import ActionButton from '../components/ActionButton'
-import { dispatch } from '../lib/utils'
-
-function getFeed () {
-  dispatch({ type: 'getFeed' })
-}
+import { getFeed } from '../lib/utils'
 
 export default class Feed extends Component {
   constructor () {
