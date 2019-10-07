@@ -61,18 +61,20 @@ export default class FeedItem extends Component {
         paddingHorizontal: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: "center"
+        alignItems: "center",
       },
       play: {
         // padding: 10,
         height: 50,
         width: 50,
+        paddingLeft: 5,
         backgroundColor: colors.color1,
         borderRadius: 30,
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "center"
       },
       track: {
-        width: '70%',
+        width: '62%',
         flexDirection: "column",
         justifyContent: "flex-end"
       }
@@ -81,7 +83,7 @@ export default class FeedItem extends Component {
       <View style={styles.container}>
         <Avatar />
         <View style={styles.play}>
-          <PlayButton size={30} />
+          <PlayButton size={20} />
         </View>
         <View style={styles.track}>
           <Slider disabled />

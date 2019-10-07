@@ -145,7 +145,7 @@ export default class App extends Component {
       replicatedAt,
       feedUpdatedAt
     } = this.state
-    // console.log('REPLICATION', replication)
+    console.log('REPLICATION', replication)
     return (
       <NavigationNativeContainer>
         <Stack.Navigator>
@@ -167,15 +167,15 @@ export default class App extends Component {
                   {connectedPeers &&
                     connectedPeers.map(peer => {
                       return (
-                        <View>
+                        <View key={peer[1].key}>
                           <Pulse
-                            color='orange'
-                            numPulses={3}
-                            diameter={400}
-                            speed={20}
-                            duration={2000}
+                            color='green'
+                            numPulses={2}
+                            diameter={80}
+                            speed={10}
+                            duration={3000}
                           />
-                          <Avatar key={peer[1].key} source={peer[1].image} />
+                          <Avatar source={peer[1].image} />
                         </View>
                       )
                     })}
