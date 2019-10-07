@@ -10,6 +10,7 @@ export default class Feed extends Component {
     this.state = {}
   }
   componentDidUpdate (prevProps, prevState) {
+    console.log('PREV', prevProps)
     if (
       prevProps.replicatedAt !== this.props.replicatedAt ||
       prevProps.feedUpdatedAt !== this.props.feedUpdatedAt
@@ -22,8 +23,10 @@ export default class Feed extends Component {
   render () {
     const { navigation } = this.props
     const { isLoading, feed } = this.state
+    // console.log('PROPS', this.props)
     return (
       <View style={{ flex: 1, width: '100%' }}>
+        <FeedItem />
         <FlatList
           refreshing={isLoading}
           onRefresh={this.handleRefresh}

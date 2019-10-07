@@ -5487,6 +5487,11 @@ react-native-action-button@^2.8.5:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-android-wifi@^0.0.41:
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/react-native-android-wifi/-/react-native-android-wifi-0.0.41.tgz#29f5f558a57f53768899c6c0cea8ac87171ce731"
+  integrity sha512-hbyUwSui4TANpzCO2J1v3wmXiYK6xLgBhB8EpGjIvOd47RNhsBV9makiYVEkM5xeyKRnDHbwZaD6Ju4sFLrqMA==
+
 react-native-audio@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/react-native-audio/-/react-native-audio-4.3.0.tgz#fae22b81f6a4dda706fd4837d0c6a89c66cf2e7e"
@@ -5511,6 +5516,11 @@ react-native-make@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-make/-/react-native-make-1.0.1.tgz#3e919ca032bd67792040397504017c2a80a96417"
   integrity sha512-+Wo2JSp6NyeKleH9aZcdPsW7X8KiBOZkwx6L65UkPCDbk4FlcYd4yw+YIuK0SUVFkUaFHTU1n8LjIjFpT+YICA==
+
+react-native-pulse@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/react-native-pulse/-/react-native-pulse-1.0.7.tgz#5a8dc60cb6585f90ce8400beb74fbf89e5f7cd1b"
+  integrity sha512-PQvek/hC2YZddzJgyJT9FZbg37eZKl1rcYNlHbSItL3XZ0n3zF5jxFRrYLyGqHnRuRPHoY7qnrdHe4qVwy3Jnw==
 
 react-native-reanimated@^1.2.0:
   version "1.2.0"

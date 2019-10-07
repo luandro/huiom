@@ -27,7 +27,8 @@
     "ssb-promiscuous": "^1.1.0",
     "ssb-ref": "^2.13.9",
     "ssb-replicate": "^1.3.0",
-    "ssb-serve-blobs": "^2.1.0"
+    "ssb-serve-blobs": "^2.1.0",
+    "ssb-threads": "^3.6.0"
   },
   "devDependencies": {
     "noderify": "^4.1.0"

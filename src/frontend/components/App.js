@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { View, Text, Button, Switch, Image } from 'react-native'
+import { View, Text, Button, Switch, PermissionsAndroid } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import Pulse from 'react-native-pulse'
+import wifi from 'react-native-android-wifi'
 import { dispatch } from '../lib/utils'
 import Feed from '../pages/Feed'
 import Record from '../pages/Record'
-import { getFeed } from '../lib/utils' // SHOULD BE ON FEED COMPONENT
+import Avatar from './Avatar'
 
 const Stack = createStackNavigator()
 
@@ -14,6 +16,7 @@ export default class App extends Component {
   constructor () {
     super()
     this.state = {
+      wifi: null,
       server: true,
       isLoading: false,
       feed: null,
@@ -26,13 +29,39 @@ export default class App extends Component {
     this.reducer.bind(this)
     // this.toggleRecorder = this.toggleRecorder.bind(this)
   }
-  componentDidMount () {
+  async componentDidMount () {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          'title': 'Wifi networks',
+          'message': 'We need your permission in order to find wifi networks'
+        }
+      )
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Thank you for your permission! :)");
+      } else {
+        console.log("You will not able to retrieve wifi available networks list");
+      }
+    } catch (err) {
+      console.warn(err)
+    }
+    wifi.isEnabled((isEnabled) => {
+      if (isEnabled) {
+        console.log("wifi service enabled")
+        this.setState({
+          wifi: 'enabled'
+        })
+      } else {
+        console.log("wifi service is disabled")
+        this.setState({
+          wifi: 'disabled'
+        })
+      }
+    });
+    nodejs.start('loader.js')
     dispatch({ type: 'whoami' })
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
-  }
-
-  componentWillMount () {
-    nodejs.start('loader.js')
   }
 
   componentWillUnmount () {
@@ -44,15 +73,6 @@ export default class App extends Component {
       // redirect to profile
     }
     // console.log('PROFILE', prevState.profile)
-    // SHOULD BE ON FEED COMPONENT
-    if (
-      prevState.replicatedAt !== this.state.replicatedAt ||
-      prevState.feedUpdatedAt !== this.state.feedUpdatedAt
-    ) {
-      console.log('Lets get feed')
-      // Dirty hack to update
-      getFeed()
-    }
   }
 
   reducer ({ type, payload }) {
@@ -88,21 +108,29 @@ export default class App extends Component {
     }
   }
   render () {
-    const { server, feed, connectedPeers, stagedPeers, replication } = this.state
-    console.log('FEED', feed)
+    const { server, feed, connectedPeers, stagedPeers, replication, replicatedAt, feedUpdatedAt } = this.state
     // console.log('REPLICATION', replication)
     return (
       <NavigationNativeContainer>
         <Stack.Navigator>
           <Stack.Screen
             name='Feed'
-            component={Feed}
+            component={(props) => <Feed
+              feed={feed}
+              replication={replication}
+              replicatedAt={replicatedAt}
+              feedUpdatedAt={feedUpdatedAt}
+              {...props}
+            />}
             options={{
               headerTitle: '',
               headerLeft: () => (
                 <View style={{ paddingLeft: 15 }}>
                   {connectedPeers && connectedPeers.map(peer => {
-                    return <Image key={peer[1].key} source={{ uri: peer[1].image}} style={{ height: 50, width: 50, borderRadius: 25, borderWidth: 0, borderColor: 'green' }} />
+                    return (<View>
+                      <Pulse color='orange' numPulses={3} diameter={400} speed={20} duration={2000} />
+                      <Avatar key={peer[1].key} source={peer[1].image} />
+                    </View>)
                   })}
                 </View>
               ),
@@ -110,11 +138,15 @@ export default class App extends Component {
                 <Switch
                   style={{ paddingRight: 15 }}
                   onChange={() => {
-                    // if (server) {
+                    if (server) {
+                      // Hotspot.enable(() => {
+                      //   console.log("Hotspot Enabled")
+                      // }, (err) => {
+                      //   console.log(err.toString())
+                      // })
+                    } else {
 
-                    // } else {
-
-                    // }
+                    }
                     this.setState({ server: !server})
                   }}
                   thumbColor='#000'

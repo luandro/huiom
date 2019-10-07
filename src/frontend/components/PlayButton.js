@@ -12,7 +12,28 @@ const events = [
   TrackPlayerEvents.PLAYBACK_ERROR
 ]
 
-export default ({ play, stop }) => {
+export default ({ play, stop, size }) => {
+  const styles = StyleSheet.create({
+    activePlayButton: {
+      backgroundColor: 'black',
+      height: size || 70,
+      width: size || 70
+    },
+    playButton: {
+      height: 0,
+      width: 0,
+      borderStyle: 'solid',
+      borderTopWidth: size - (size/3) || 50,
+      borderRightWidth: 0,
+      borderBottomWidth: size - (size/3) || 50,
+      borderLeftWidth: size || 70,
+      borderTopColor: 'transparent',
+      borderRightColor: 'transparent',
+      borderBottomColor: 'transparent',
+      borderRightColor: 'black'
+    }
+  })
+  
   const [playerState, setState] = useState(null)
   useTrackPlayerEvents(events, event => {
     if (event.type === TrackPlayerEvents.PLAYBACK_ERROR) {
@@ -36,24 +57,3 @@ export default ({ play, stop }) => {
     </View>
   )
 }
-
-var styles = StyleSheet.create({
-  activePlayButton: {
-    backgroundColor: 'black',
-    height: 70,
-    width: 70
-  },
-  playButton: {
-    height: 0,
-    width: 0,
-    borderStyle: 'solid',
-    borderTopWidth: 50,
-    borderRightWidth: 0,
-    borderBottomWidth: 50,
-    borderLeftWidth: 70,
-    borderTopColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderRightColor: 'black'
-  }
-})

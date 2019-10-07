@@ -68,6 +68,7 @@ const sbot = require('secret-stack')(ssConfig) // eslint-disable-line
   .use(require('ssb-serve-blobs'))
   .use(require('ssb-backlinks'))
   .use(require('ssb-about'))
+  .use(require('ssb-threads'))
   .use(require('ssb-ebt'))
   .call(null, config)
 

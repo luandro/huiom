@@ -1,3 +1,5 @@
 rootProject.name = 'huiom'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+// include ':hotspotmanager'
+// project(':hotspotmanager').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-wifi-hotspot/android/hotspotmanager')
 include ':app'

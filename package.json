@@ -21,9 +21,11 @@
     "react": "16.10.2",
     "react-native": "0.61.2",
     "react-native-action-button": "^2.8.5",
+    "react-native-android-wifi": "^0.0.41",
     "react-native-audio": "^4.3.0",
     "react-native-ffmpeg": "^0.2.1",
     "react-native-gesture-handler": "^1.4.1",
+    "react-native-pulse": "^1.0.7",
     "react-native-reanimated": "^1.2.0",
     "react-native-screens": "^2.0.0-alpha.3",
     "react-native-track-player": "git://github.com/react-native-kit/react-native-track-player.git#97692c6894c5ffaae9ad5772c4db0e24c420ac0d"
