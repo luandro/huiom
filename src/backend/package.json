@@ -8,6 +8,7 @@
   "dependencies": {
     "chloride": "^2.2.14",
     "multiserver-address": "^1.0.1",
+    "non-private-ip-android": "^1.4.4-3",
     "pull-file": "^1.1.0",
     "pull-paramap": "^1.2.2",
     "pull-stream": "^3.6.14",
@@ -28,7 +29,8 @@
     "ssb-ref": "^2.13.9",
     "ssb-replicate": "^1.3.0",
     "ssb-serve-blobs": "^2.1.0",
-    "ssb-threads": "^3.6.0"
+    "ssb-threads": "^3.6.0",
+    "staltz-multiserver": "^3.3.6-1"
   },
   "devDependencies": {
     "noderify": "^4.1.0"

@@ -222,7 +222,7 @@ export default class App extends Component {
           />
           <Stack.Screen
             name='Record'
-            component={Record}
+            component={props => <Record {...props} />}
             options={{
               headerTitle: ''
             }}
