@@ -22,6 +22,7 @@ export default class App extends Component {
       feed: null,
       feedUpdatedAt: null,
       replication: null,
+      replicatingPeer: null,
       profile: null,
       connectedPeers: null,
       stagedPeers: null
@@ -71,6 +72,11 @@ export default class App extends Component {
   componentDidUpdate (prevProps, prevState) {
     if (prevState.profile !== this.state.profile && !this.state.profile.name) {
       // redirect to profile
+    }
+    if (prevState.replication !== this.state.replication) {
+      this.setState({
+        replicatingPeer: Object.keys(this.state.replication.pendingPeers)[0]
+      })
     }
     if (prevState.wifiStatus !== this.state.wifiStatus) {
       wifi.isEnabled(isEnabled => {
@@ -141,11 +147,11 @@ export default class App extends Component {
       feed,
       connectedPeers,
       stagedPeers,
+      replicatingPeer,
       replication,
       replicatedAt,
       feedUpdatedAt
     } = this.state
-    console.log('REPLICATION', replication)
     return (
       <NavigationNativeContainer>
         <Stack.Navigator>
@@ -168,13 +174,13 @@ export default class App extends Component {
                     connectedPeers.map(peer => {
                       return (
                         <View key={peer[1].key}>
-                          <Pulse
+                          {peer[1].key === replicatingPeer && <Pulse
                             color='green'
                             numPulses={2}
                             diameter={80}
                             speed={10}
                             duration={3000}
-                          />
+                          />}
                           <Avatar source={peer[1].image} />
                         </View>
                       )
@@ -182,7 +188,7 @@ export default class App extends Component {
                 </View>
               ),
               headerRight: () => (
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 15 }}>
                   {wifiStatus && <TouchableHighlight onPress={this.handleWifi}>
                     <View
                       style={{
@@ -193,7 +199,7 @@ export default class App extends Component {
                       }}
                     />
                   </TouchableHighlight>}
-                  <Switch
+                  {/* <Switch
                     style={{ paddingRight: 15 }}
                     onChange={() => {
                       if (server) {
@@ -209,7 +215,7 @@ export default class App extends Component {
                     thumbColor='#000'
                     trackColor='#f1f1'
                     value={server}
-                  />
+                  /> */}
                 </View>
               )
             }}
