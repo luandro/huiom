@@ -3,13 +3,12 @@ import { View, Switch, Text, TouchableHighlight, PermissionsAndroid } from 'reac
 import nodejs from 'nodejs-mobile-react-native'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import Pulse from 'react-native-pulse'
 import wifi from 'react-native-android-wifi'
 import Hotspot from 'react-native-wifi-hotspot'
 import { whoami } from '../lib/utils'
 import Feed from '../pages/Feed'
 import Record from '../pages/Record'
-import Avatar from './Avatar'
+import Connections from './Connections'
 
 const Stack = createStackNavigator()
 
@@ -73,11 +72,6 @@ export default class App extends Component {
   componentDidUpdate (prevProps, prevState) {
     if (prevState.profile !== this.state.profile && !this.state.profile.name) {
       // redirect to profile
-    }
-    if (prevState.replication !== this.state.replication) {
-      this.setState({
-        replicatingPeer: Object.keys(this.state.replication.pendingPeers)[0]
-      })
     }
     if (prevState.wifiStatus !== this.state.wifiStatus) {
       wifi.isEnabled(isEnabled => {
@@ -146,9 +140,6 @@ export default class App extends Component {
       wifiStatus,
       server,
       feed,
-      connectedPeers,
-      stagedPeers,
-      replicatingPeer,
       replication,
       replicatedAt,
       feedUpdatedAt
@@ -170,27 +161,7 @@ export default class App extends Component {
             )}
             options={{
               headerTitle: '',
-              headerLeft: () => (
-                <View style={{ paddingLeft: 15, flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}>
-                  {connectedPeers &&
-                    connectedPeers.map((peer, key) => {
-                      // console.log('PEER', key, peer)
-                      return (
-                        <View key={peer[1].key} style={{ marginHorizontal: 5 }}>
-                          {peer[1].key === replicatingPeer && <Pulse
-                            color='green'
-                            numPulses={2}
-                            diameter={80}
-                            speed={10}
-                            duration={3000}
-                          />}
-                          {peer[1].type === 'lan' && <Avatar source={peer[1].image} />}
-                          {peer[1].type === 'pub' && <View style={{ backgroundColor: 'red', height: 50, width: 50, borderRadius: 50}}><Text style={{ alignSelf: "center", paddingTop: 13, color: 'white' }}>pub</Text></View>}
-                        </View>
-                      )
-                    })}
-                </View>
-              ),
+              headerLeft: () => <Connections />,
               headerRight: () => (
                 <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 15 }}>
                   {wifiStatus && <TouchableHighlight onPress={this.handleWifi}>
