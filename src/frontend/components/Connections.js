@@ -11,7 +11,7 @@ export default class Connections extends Component {
       connectedPeers: null,
       stagedPeers: null,
       replication: null,
-      replicatingPeer: null,
+      replicatingPeer: null
     }
     this.reducer.bind(this)
   }
@@ -24,6 +24,9 @@ export default class Connections extends Component {
         replicatingPeer: Object.keys(this.state.replication.pendingPeers)[0]
       })
     }
+  }
+  componentWillUnmount () {
+    this.listener.remove() // solves setState on unmounted components!
   }
 
   reducer ({ type, payload }) {
@@ -45,31 +48,55 @@ export default class Connections extends Component {
     }
   }
   render () {
-    const {
-      connectedPeers,
-      stagedPeers,
-      replicatingPeer,
-    } = this.state
+    const { connectedPeers, stagedPeers, replicatingPeer } = this.state
     return (
-      <View style={{ paddingLeft: 15, flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}>
-      {connectedPeers &&
-        connectedPeers.map((peer, key) => {
-          // console.log('PEER', key, peer)
-          return (
-            <View key={peer[1].key} style={{ marginHorizontal: 5 }}>
-              {peer[1].key === replicatingPeer && <Pulse
-                color='green'
-                numPulses={2}
-                diameter={80}
-                speed={10}
-                duration={3000}
-              />}
-              {peer[1].type === 'lan' && <Avatar source={peer[1].image} />}
-              {peer[1].type === 'pub' && <View style={{ backgroundColor: 'red', height: 50, width: 50, borderRadius: 50}}><Text style={{ alignSelf: "center", paddingTop: 13, color: 'white' }}>pub</Text></View>}
-            </View>
-          )
-        })}
-    </View>
+      <View
+        style={{
+          paddingLeft: 15,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-start'
+        }}
+      >
+        {connectedPeers &&
+          connectedPeers.map((peer, key) => {
+            // console.log('PEER', key, peer)
+            return (
+              <View key={peer[1].key} style={{ marginHorizontal: 5 }}>
+                {peer[1].key === replicatingPeer && (
+                  <Pulse
+                    color='green'
+                    numPulses={2}
+                    diameter={80}
+                    speed={10}
+                    duration={3000}
+                  />
+                )}
+                {peer[1].type === 'lan' && <Avatar source={peer[1].image} />}
+                {peer[1].type === 'pub' && (
+                  <View
+                    style={{
+                      backgroundColor: 'red',
+                      height: 50,
+                      width: 50,
+                      borderRadius: 50
+                    }}
+                  >
+                    <Text
+                      style={{
+                        alignSelf: 'center',
+                        paddingTop: 13,
+                        color: 'white'
+                      }}
+                    >
+                      pub
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )
+          })}
+      </View>
     )
   }
 }
