@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import Recorder from '../components/Recorder'
 import Button from '../components/Button'
+import { publishAudio, deleteAudio } from '../lib/utils'
 
 export default class Recording extends Component {
   state = {
@@ -30,12 +31,13 @@ export default class Recording extends Component {
 
   componentWillUnmount () {
     // Cancel
-    // onCancel(this.props.fileData)
+    const { fileData } = this.state
+    if (fileData) {
+      deleteAudio(fileData)
+    }
   }
 
   render () {
-    console.log(this.props)
-    const { onCancel, onPublish } = this.props
     const { fileData, isRecording } = this.state
     return (
       <View style={{ flexGrow: 4 }}>
@@ -50,12 +52,12 @@ export default class Recording extends Component {
           <Button
             disabled={isRecording}
             title='Cancel'
-            onPress={() => onCancel(fileData)}
+            onPress={() => deleteAudio(fileData)}
           />
           <Button
             title='Publish'
             disabled={!fileData}
-            onPress={() => onPublish(fileData)}
+            onPress={() => publishAudio(fileData)}
           />
         </View>}
       </View>

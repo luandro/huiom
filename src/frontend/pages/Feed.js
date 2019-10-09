@@ -9,38 +9,46 @@ export default class Feed extends Component {
     super()
     this.state = {}
   }
+
+  componentDidMount () {
+    console.log('Lets get feed')
+    getFeed()
+  }
+
   componentDidUpdate (prevProps, prevState) {
     console.log('PREV', prevProps)
     if (
       prevProps.replicatedAt !== this.props.replicatedAt ||
       prevProps.feedUpdatedAt !== this.props.feedUpdatedAt
     ) {
-      console.log('Lets get feed')
+      console.log('Lets update feed')
       // Dirty hack to update
       getFeed()
     }
   }
   render () {
-    const { navigation } = this.props
-    const { isLoading, feed } = this.state
-    // console.log('PROPS', this.props)
+    const { navigation, feed } = this.props
+    // const { isLoading, feed } = this.state
+    console.log('Feed on feed', this.props)
     return (
       <View style={{ flex: 1, width: '100%' }}>
         <FeedItem />
         <FlatList
-          refreshing={isLoading}
+          // refreshing={isLoading}
           onRefresh={this.handleRefresh}
           data={feed}
           renderItem={({ item }) => {
+            console.log(item)
             const { author, authorName, content, timestamp } = item.value
             return (
-              <Audio
-                author={author}
-                authorName={authorName}
-                filePath={`http://localhost:26835/${content.blob}`}
-                duration={content.duration}
-                timestamp={timestamp}
-              />
+              <Text>Item</Text>
+              // <Audio
+              //   author={author}
+              //   authorName={authorName}
+              //   filePath={`http://localhost:26835/${content.blob}`}
+              //   duration={content.duration}
+              //   timestamp={timestamp}
+              // />
             )
           }}
           style={{ padding: 10 }}

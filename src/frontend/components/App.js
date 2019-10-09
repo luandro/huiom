@@ -152,6 +152,7 @@ export default class App extends Component {
       replicatedAt,
       feedUpdatedAt
     } = this.state
+    console.log('FEED', feed)
     return (
       <NavigationNativeContainer>
         <Stack.Navigator>
