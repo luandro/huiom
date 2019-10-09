@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Slider, Text } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import Avatar from './Avatar'
 import PlayButton from './PlayButton'
 import colors from '../lib/colors'
@@ -86,7 +86,7 @@ export default class FeedItem extends Component {
           <PlayButton size={20} />
         </View>
         <View style={styles.track}>
-          <Slider disabled />
+          {/* <Slider disabled /> */}
           <Text style={{ alignSelf: "flex-end" }}>30s</Text>
         </View>
       </View>

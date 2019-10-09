@@ -68,9 +68,9 @@ cd ./nodejs-assets/nodejs-project;
 $(npm bin)/noderify \
   --replace.node-extend=xtend \
   --replace.multiserver/plugins/net=staltz-multiserver/plugins/net \
-  --replace.non-private-ip=non-private-ip-android \
   --filter=rn-bridge \
   server.js > _server.js;
+  # --replace.non-private-ip=non-private-ip-android \
   # --replace.bindings=bindings-noderify-nodejs-mobile \
   # --replace.utp-native=utp-native-no-prebuild \
   # --filter=bufferutil \

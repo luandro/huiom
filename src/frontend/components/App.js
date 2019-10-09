@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { View, Switch, TouchableHighlight, PermissionsAndroid } from 'react-native'
+import { View, Switch, Text, TouchableHighlight, PermissionsAndroid } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Pulse from 'react-native-pulse'
 import wifi from 'react-native-android-wifi'
-import { dispatch } from '../lib/utils'
+import { whoami } from '../lib/utils'
 import Feed from '../pages/Feed'
 import Record from '../pages/Record'
 import Avatar from './Avatar'
@@ -61,7 +61,7 @@ export default class App extends Component {
       }
     })
     nodejs.start('loader.js')
-    dispatch({ type: 'whoami' })
+    whoami()
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
   }
 
@@ -169,11 +169,12 @@ export default class App extends Component {
             options={{
               headerTitle: '',
               headerLeft: () => (
-                <View style={{ paddingLeft: 15 }}>
+                <View style={{ paddingLeft: 15, flexDirection: "row", alignItems: "center", justifyContent: "flex-start" }}>
                   {connectedPeers &&
-                    connectedPeers.map(peer => {
+                    connectedPeers.map((peer, key) => {
+                      // console.log('PEER', key, peer)
                       return (
-                        <View key={peer[1].key}>
+                        <View key={peer[1].key} style={{ marginHorizontal: 5 }}>
                           {peer[1].key === replicatingPeer && <Pulse
                             color='green'
                             numPulses={2}
@@ -181,7 +182,8 @@ export default class App extends Component {
                             speed={10}
                             duration={3000}
                           />}
-                          <Avatar source={peer[1].image} />
+                          {peer[1].type === 'lan' && <Avatar source={peer[1].image} />}
+                          {peer[1].type === 'pub' && <View style={{ backgroundColor: 'red', height: 50, width: 50, borderRadius: 50}}><Text style={{ alignSelf: "center", paddingTop: 13, color: 'white' }}>pub</Text></View>}
                         </View>
                       )
                     })}
