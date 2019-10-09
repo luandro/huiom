@@ -5588,6 +5588,11 @@ react-native-screens@^2.0.0-alpha.3:
   version "1.2.0"
   resolved "git://github.com/react-native-kit/react-native-track-player.git#97692c6894c5ffaae9ad5772c4db0e24c420ac0d"
 
+react-native-wifi-hotspot@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-wifi-hotspot/-/react-native-wifi-hotspot-1.0.0.tgz#1591942fe0940c3a33c47d29a61623ec1d8c41e5"
+  integrity sha512-i/66o6obi5rPlfwQpSZvYcl8rpDLXJ1x2rjLRaI5VS8JhMPhGH0xuSn3BwTi/wuNnpWmRYBB0pe0ggYfolM0Ow==
+
 react-native@0.61.2:
   version "0.61.2"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.61.2.tgz#987b91b063557f8ebec803fdfea2044a24bdbe4d"

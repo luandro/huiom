@@ -5,6 +5,7 @@ import { NavigationNativeContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import Pulse from 'react-native-pulse'
 import wifi from 'react-native-android-wifi'
+import Hotspot from 'react-native-wifi-hotspot'
 import { whoami } from '../lib/utils'
 import Feed from '../pages/Feed'
 import Record from '../pages/Record'
@@ -152,7 +153,7 @@ export default class App extends Component {
       replicatedAt,
       feedUpdatedAt
     } = this.state
-    console.log('FEED', feed)
+    // console.log('FEED', feed)
     return (
       <NavigationNativeContainer>
         <Stack.Navigator>
@@ -202,23 +203,28 @@ export default class App extends Component {
                       }}
                     />
                   </TouchableHighlight>}
-                  {/* <Switch
+                  <Switch
                     style={{ paddingRight: 15 }}
                     onChange={() => {
                       if (server) {
-                        // Hotspot.enable(() => {
-                        //   console.log("Hotspot Enabled")
-                        // }, (err) => {
-                        //   console.log(err.toString())
-                        // })
+                        Hotspot.enable(() => {
+                          console.log("Hotspot Enabled")
+                        }, (err) => {
+                          console.log(err.toString())
+                        })
                       } else {
+                        Hotspot.disable(() => {
+                          console.log("Hotspot Disabled");
+                        }, (err) => {
+                          console.log(err.toString());
+                        })
                       }
                       this.setState({ server: !server })
                     }}
                     thumbColor='#000'
                     trackColor='#f1f1'
                     value={server}
-                  /> */}
+                  />
                 </View>
               )
             }}
