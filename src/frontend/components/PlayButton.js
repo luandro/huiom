@@ -13,7 +13,7 @@ const events = [
   TrackPlayerEvents.PLAYBACK_ERROR
 ]
 
-export default ({ play, stop, size, circular }) => {
+export default ({ play, stop, size, circular, isPlaying }) => {
   const [playerState, setState] = useState(null)
   useTrackPlayerEvents(events, event => {
     if (event.type === TrackPlayerEvents.PLAYBACK_ERROR) {
@@ -23,7 +23,7 @@ export default ({ play, stop, size, circular }) => {
       setState(event.state)
     }
   })
-  const isPlaying = playerState === 3
+  // const isPlaying = playerState === 3
   const styles = StyleSheet.create({
     activePlayButton: {
       backgroundColor: 'black',
