@@ -1,7 +1,7 @@
-const bridge = require('rn-bridge')
 const pull = require('pull-stream')
 const pullParaMap = require('pull-paramap')
 const toUrl = require('ssb-serve-blobs/id-to-url')
+const { commit, getImage } = require('./utils')
 
 module.exports = sbot => {
   // Replication updates
@@ -14,7 +14,7 @@ module.exports = sbot => {
   )
 
   // Peers we're connected / connecting / disconnecting from (current state)
-  pull( 
+  pull(
     sbot.conn.peers(),
     pull.asyncMap((peers, cb) => {
       // go through the peers array and fetches 'name' for each peer
@@ -22,7 +22,7 @@ module.exports = sbot => {
         pull.values(peers),
         pullParaMap(
           (peer, cb) => {
-            getImage(peer[1].key, (err, image) => {
+            getImage(sbot, peer[1].key, (err, image) => {
               if (err) return cb(err)
               peer[1].image = toUrl(image)
               cb(null, peer)
@@ -51,14 +51,4 @@ module.exports = sbot => {
       commit({ type: 'staged-peers', payload: data })
     })
   )
-
-  function getImage (feedId, cb) {
-    sbot.about.socialValue({ key: 'image', dest: feedId }, cb)
-  }
 }
-
-function commit (mutation) {
-  // mutation should be of form { type, payload? }
-  bridge.channel.post('mutation', mutation)
-}
-// used for sending mutations to front end state machines

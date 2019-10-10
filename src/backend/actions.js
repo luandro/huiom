@@ -2,8 +2,10 @@ const bridge = require('rn-bridge')
 const pull = require('pull-stream')
 const pullFile = require('pull-file')
 const pullParaMap = require('pull-paramap')
-const { isAudio } = require('ssb-audio-schema')
 const fs = require('fs')
+const { isAudio } = require('ssb-audio-schema')
+const toUrl = require('ssb-serve-blobs/id-to-url')
+const { commit, getImage, getName } = require('./utils')
 
 const getAccFile = filePath => filePath.split('.opus')[0] + '.aac'
 
@@ -66,10 +68,10 @@ module.exports = (sbot, appDataDir) => {
           pull.filter(isAudio),
           pullParaMap(
             (msg, cb) => {
-              getName(msg.value.author, (err, name) => {
+              getImage(sbot, msg.value.author, (err, image) => {
                 if (err) return cb(err)
 
-                msg.value.authorName = name
+                msg.value.image = toUrl(image)
                 cb(null, msg)
               })
             },
@@ -85,7 +87,7 @@ module.exports = (sbot, appDataDir) => {
         break
 
       case 'whoami':
-        getName(sbot.id, (err, name) => {
+        getName(sbot, sbot.id, (err, name) => {
           if (err) return console.error('ssb:', err)
 
           commit({
@@ -152,14 +154,4 @@ module.exports = (sbot, appDataDir) => {
       //
     }
   })
-
-  function getName (feedId, cb) {
-    sbot.about.socialValue({ key: 'name', dest: feedId }, cb)
-  }
 }
-
-function commit (mutation) {
-  // mutation should be of form { type, payload? }
-  bridge.channel.post('mutation', mutation)
-}
-// used for sending mutations to front end state machines
