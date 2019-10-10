@@ -36,10 +36,12 @@ export default class Connections extends Component {
           replication: payload
         })
       case 'connected-peers':
-        var connectedPeers = payload.filter(
-          ([msa, data]) => data.state === 'connected'
-        )
-        this.setState({ connectedPeers })
+        if (payload) {
+          var connectedPeers = payload.filter(
+            ([msa, data]) => data.state === 'connected'
+          )
+          this.setState({ connectedPeers })
+        }
         break
       case 'staged-peers':
         this.setState({ stagedPeers: payload })

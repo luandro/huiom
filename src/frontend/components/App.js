@@ -47,45 +47,13 @@ export default class App extends Component {
 
   reducer ({ type, payload }) {
     switch (type) {
-      case 'feed':
-        this.setState({
-          isLoading: false,
-          feed: payload
-        })
-        break
-      case 'newAudioFile':
-        this.setState({
-          feedUpdatedAt: Date.now()
-        })
-        break
-      case 'replication':
-        this.setState({
-          replication: payload
-        })
       case 'whoami':
         this.setState({ profile: payload })
-        break
-      case 'connected-peers':
-        var connectedPeers = payload.filter(
-          ([msa, data]) => data.state === 'connected'
-        )
-        this.setState({ connectedPeers })
-        break
-      case 'staged-peers':
-        this.setState({ stagedPeers: payload })
         break
       default:
     }
   }
   render () {
-    const {
-      wifiStatus,
-      server,
-      feed,
-      replication,
-      replicatedAt,
-      feedUpdatedAt
-    } = this.state
     // console.log('FEED', feed)
     return (
       <NavigationNativeContainer>
