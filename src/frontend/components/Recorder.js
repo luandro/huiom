@@ -178,29 +178,29 @@ class Recorder extends Component {
         'opus',
         opusFile
       ])
-        .then(result =>
+        .then(result => {
           console.log('FFmpeg process exited with rc ' + result.rc)
-        )
+          this.setState({
+            isProcessing: false,
+            isFinished: didSucceed
+          })
+          this.props.setRecordedFile({
+            filePath: opusFile,
+            duration: formatTime(this.state.currentTime),
+            size
+          })
+          console.log(
+            `Finished recording of duration ${formatTime(
+              this.state.currentTime
+            )} seconds at path: ${filePath}`
+          )
+        })
         .catch(err => {
           this.setState({
             isProcessing: false,
             isFinished: true
           })
         })
-      this.setState({
-        isProcessing: false,
-        isFinished: didSucceed
-      })
-      this.props.setRecordedFile({
-        filePath: opusFile,
-        duration: formatTime(this.state.currentTime),
-        size
-      })
-      console.log(
-        `Finished recording of duration ${formatTime(
-          this.state.currentTime
-        )} seconds at path: ${filePath}`
-      )
     }
   }
 
