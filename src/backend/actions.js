@@ -112,18 +112,19 @@ module.exports = (sbot, appDataDir) => {
         })
         break
 
-      case 'setName':
+      case 'setProfile':
         if (!payload) break
-
-        var nameMsg = { type: 'about', about: sbot.id, name: payload }
-        sbot.publish(nameMsg, (err, value) => {
+        const { name, image } = payload
+        var profileMsg = { type: 'about', about: sbot.id, name, image }
+        sbot.publish(profileMsg, (err, value) => {
           if (err) return console.error(err)
 
           commit({
             type: 'whoami',
             payload: {
               feedId: sbot.id,
-              name: payload
+              name,
+              image
             }
           })
         })

@@ -9,17 +9,20 @@ export const whoami = () => dispatch({ type: 'whoami' })
 
 export const getFeed = () => dispatch({ type: 'getFeed' })
 
-export const publishAudio = payload => dispatch({
-  type: 'publishAudioFile',
-  payload
-})
+export const publishAudio = payload =>
+  dispatch({
+    type: 'publishAudioFile',
+    payload
+  })
 
-export const deleteAudio = payload => dispatch({
-  type: 'deleteAudioFile',
-  payload
-})
+export const deleteAudio = payload =>
+  dispatch({
+    type: 'deleteAudioFile',
+    payload
+  })
 
-export const setName = payload => dispatch({
-  type: 'setName',
-  payload
-})
+export const setProfile = payload =>
+  dispatch({
+    type: 'setProfile',
+    payload
+  })
