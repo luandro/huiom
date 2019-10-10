@@ -64,23 +64,21 @@ export default class Feed extends Component {
     const { isLoading, feed } = this.state
     return (
       <View style={{ flex: 1, width: '100%' }}>
-        <FeedItem />
         <FlatList
           // refreshing={isLoading}
           onRefresh={this.handleRefresh}
           data={feed}
           renderItem={({ item }) => {
             console.log(item)
-            const { author, authorName, content, timestamp } = item.value
+            const { author, image, content, timestamp } = item.value
             return (
-              <Text>Item</Text>
-              // <Audio
-              //   author={author}
-              //   authorName={authorName}
-              //   filePath={`http://localhost:26835/${content.blob}`}
-              //   duration={content.duration}
-              //   timestamp={timestamp}
-              // />
+              <FeedItem
+                author={author}
+                image={image}
+                filePath={`http://localhost:26835/${content.blob}`}
+                duration={content.duration}
+                timestamp={timestamp}
+              />
             )
           }}
           style={{ padding: 10 }}

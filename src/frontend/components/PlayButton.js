@@ -54,27 +54,14 @@ export default ({ play, stop, size, circular }) => {
       borderRightColor: 'black'
     }
   })
-  
-  const [playerState, setState] = useState(null)
-  useTrackPlayerEvents(events, event => {
-    if (event.type === TrackPlayerEvents.PLAYBACK_ERROR) {
-      console.warn('An error occured while playing the current track.')
-    }
-    if (event.type === TrackPlayerEvents.PLAYBACK_STATE) {
-      setState(event.state)
-    }
-  })
-
-  const isPlaying = playerState === 3
-
   return (
-    <View style={{ alignItems: 'center' }}>
-      <TouchableHighlight
-        underlayColor={'transparent'}
-        onPress={() => (isPlaying ? stop() : play())}
-      >
+    <TouchableHighlight
+      underlayColor={'transparent'}
+      onPress={() => (isPlaying ? stop() : play())}
+    >
+      <View style={circular ? styles.circular : { alignItems: 'center' }}>
         <View style={isPlaying ? styles.activePlayButton : styles.playButton} />
-      </TouchableHighlight>
-    </View>
+      </View>
+    </TouchableHighlight>
   )
 }
