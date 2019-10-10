@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Button, FlatList } from 'react-native'
+import { View, FlatList } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
 import FeedItem from '../components/FeedItem'
 import ActionButton from '../components/ActionButton'
@@ -10,7 +10,7 @@ export default class Feed extends Component {
     super()
     this.state = {
       feed: null,
-      isLoading: null,
+      isLoading: false,
       feedUpdatedAt: null,
       replicatedAt: null,
       replication: null
@@ -24,6 +24,7 @@ export default class Feed extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    console.log(prevState, this.state)
     if (
       prevState.replicatedAt !== this.state.replicatedAt ||
       prevState.feedUpdatedAt !== this.state.feedUpdatedAt
@@ -35,6 +36,9 @@ export default class Feed extends Component {
   }
   componentWillUnmount () {
     this.listener.remove() // solves setState on unmounted components!
+  }
+  handleRefresh = () => {
+    this.setState({ isLoading: true }, () => getFeed())
   }
   reducer ({ type, payload }) {
     switch (type) {
@@ -65,11 +69,11 @@ export default class Feed extends Component {
     return (
       <View style={{ flex: 1, width: '100%' }}>
         <FlatList
-          // refreshing={isLoading}
+          refreshing={isLoading}
           onRefresh={this.handleRefresh}
           data={feed}
           renderItem={({ item }) => {
-            console.log(item)
+            // console.log(item)
             const { author, image, content, timestamp } = item.value
             return (
               <FeedItem
