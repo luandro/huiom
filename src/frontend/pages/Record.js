@@ -61,7 +61,10 @@ export default class Recording extends Component {
             <Button
               disabled={isRecording}
               title='Cancel'
-              onPress={() => deleteAudio(fileData)}
+              onPress={() => {
+                deleteAudio(fileData)
+                navigation.goBack()
+              }}
             />
             <Button
               title='Publish'
