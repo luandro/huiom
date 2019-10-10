@@ -5,10 +5,20 @@ import {
   Text,
   TextInput,
   Button,
+  Image,
   StyleSheet
 } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
-import { whoami } from '../lib/utils'
+import ImagePicker from 'react-native-image-picker'
+import { whoami, setProfile } from '../lib/utils'
+
+const options = {
+  title: 'Select image',
+  storageOptions: {
+    skipBackup: true,
+    path: 'images'
+  }
+}
 
 export default class Profile extends Component {
   constructor (props) {
@@ -20,10 +30,13 @@ export default class Profile extends Component {
       feedId: '',
       currentName: '',
       nextName: '',
-      currentImage: '',
-      nextImage: ''
+      currentImage: null,
+      nextImage: null,
+      nextImagePath: null
     }
     this.reducer.bind(this)
+    this.save = this.save.bind(this)
+    this.handleImage = this.handleImage.bind(this)
   }
 
   componentDidMount () {
@@ -35,16 +48,39 @@ export default class Profile extends Component {
     this.listener.remove() // solves setState on unmounted components!
   }
 
+  handleImage () {
+    /**
+     * The first arg is the options object for customization (it can also be null or omitted for default options),
+     * The second arg is the callback which sends object: response (more info in the API Reference)
+     */
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response)
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker')
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error)
+      } else {
+        // const source = { uri: 'data:image/jpeg;base64,' + response.data }
+        this.setState({
+          nextImage: 'data:image/jpeg;base64,' + response.data,
+          nextImagePath: response.path
+        })
+      }
+    })
+  }
+
   reducer ({ type, payload }) {
     switch (type) {
       case 'whoami':
+        console.log('PAYLOAD', payload)
         this.setState({
           isLoading: false,
           isSaving: false,
           currentName: payload.name || '',
           nextName: payload.name || '',
           currentImage: payload.image || '',
-          nextImage: payload.image || ''
+          nextImage: payload.image
         })
 
         break
@@ -55,26 +91,48 @@ export default class Profile extends Component {
   }
 
   render () {
+    const {
+      isLoading,
+      isSaving,
+      currentName,
+      nextName,
+      currentImage,
+      nextImage
+    } = this.state
     const canPublish =
-      !this.state.isLoading &&
-      this.state.nextName.length &&
-      this.state.nextName !== this.state.currentName
-
+      !isLoading &&
+      (nextName.length || nextImage) &&
+      (nextName !== currentName || nextImage !== currentImage)
+    console.log('c', currentImage)
+    console.log('n', nextImage)
     return (
       <ScrollView contentInsetAdjustmentBehavior='automatic'>
         <View style={{ padding: 5 }}>
           <Text>Name</Text>
           <TextInput
-            value={this.state.isLoading ? 'loading...' : this.state.nextName}
+            value={isLoading ? 'loading...' : nextName}
             style={styles.textInput}
             placeholder='set your name'
             onChangeText={text => this.setState({ nextName: text })}
           />
+          {currentImage !== '' || nextImage ? (
+            <Image
+              style={styles.image}
+              source={{ uri: nextImage || currentImage }}
+            />
+          ) : (
+            <View style={styles.image} />
+          )}
+          <Button
+            title={'Add image'}
+            // disabled={isSaving || !canPublish}
+            onPress={this.handleImage}
+          />
 
           <Button
-            title={this.state.isSaving ? 'Saving...' : 'Save'}
-            disabled={this.state.isSaving || !canPublish}
-            onPress={this.save.bind(this)}
+            title={isSaving ? 'Saving...' : 'Save'}
+            disabled={isSaving || !canPublish}
+            onPress={this.save}
           />
         </View>
       </ScrollView>
@@ -85,8 +143,9 @@ export default class Profile extends Component {
     this.setState({ isSaving: true })
     setProfile({
       name: this.state.nextName,
-      image: this.state.nextImage
+      image: this.state.nextImagePath
     })
+    this.props.navigate('Main')
   }
 }
 
@@ -96,5 +155,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderBottomColor: '#000',
     marginBottom: 10
+  },
+  image: {
+    marginVertical: 30,
+    alignSelf: 'center',
+    height: 200,
+    width: 200,
+    backgroundColor: 'grey'
   }
 })

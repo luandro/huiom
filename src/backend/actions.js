@@ -87,15 +87,18 @@ module.exports = (sbot, appDataDir) => {
         break
 
       case 'whoami':
-        getName(sbot, sbot.id, (err, name) => {
-          if (err) return console.error('ssb:', err)
-
-          commit({
-            type: 'whoami',
-            payload: {
-              feedId: sbot.id,
-              name
-            }
+        getName(sbot, sbot.id, (nameErr, name) => {
+          if (nameErr) return console.error('ssb:', nameErr)
+          getImage(sbot, sbot.id, (imageErr, image) => {
+            if (imageErr) return cb(imageErr)
+            commit({
+              type: 'whoami',
+              payload: {
+                feedId: sbot.id,
+                name,
+                image: image ? toUrl(image) : null
+              }
+            })
           })
         })
         break
@@ -115,19 +118,51 @@ module.exports = (sbot, appDataDir) => {
       case 'setProfile':
         if (!payload) break
         const { name, image } = payload
-        var profileMsg = { type: 'about', about: sbot.id, name, image }
-        sbot.publish(profileMsg, (err, value) => {
-          if (err) return console.error(err)
+        let profileMsg = { type: 'about', about: sbot.id, name, image }
+        if (image) {
+          pull(
+            pullFile(image, {}),
+            sbot.blobs.add((err, hash) => {
+              if (err) return console.error('SSB:', err)
+              profileMsg.image = hash
+              if (!name) {
+                getName(sbot, sbot.id, (nameErr, idName) => {
+                  if (nameErr) return console.error('ssb:', nameErr)
+                  profileMsg.name = idName
+                })
+              }
 
-          commit({
-            type: 'whoami',
-            payload: {
-              feedId: sbot.id,
-              name,
-              image
-            }
+              sbot.publish(profileMsg, (err, value) => {
+                if (err) return console.error(err)
+                console.log('Published', value)
+
+                commit({
+                  type: 'whoami',
+                  payload: {
+                    feedId: sbot.id,
+                    name: name || profileMsg.name,
+                    image: toUrl(hash)
+                  }
+                })
+              })
+            })
+          )
+        } else {
+          sbot.publish(profileMsg, (err, value) => {
+            if (err) return console.error(err)
+            getImage(sbot, sbot.id, (imageErr, idImage) => {
+              if (imageErr) return cb(imageErr)
+              commit({
+                type: 'whoami',
+                payload: {
+                  feedId: sbot.id,
+                  name,
+                  image: toUrl(idImage)
+                }
+              })
+            })
           })
-        })
+        }
         break
 
         // NOTE currently not needed because follow stimulates connection
