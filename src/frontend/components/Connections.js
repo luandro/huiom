@@ -36,7 +36,7 @@ export default class Connections extends Component {
           replication: payload
         })
       case 'connected-peers':
-        if (payload) {
+        if (Array.isArray(payload)) {
           var connectedPeers = payload.filter(
             ([msa, data]) => data.state === 'connected'
           )

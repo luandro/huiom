@@ -18,6 +18,7 @@ export default class Connections extends Component {
     this.handleWifi = this.handleWifi.bind(this)
   }
   async componentDidMount () {
+    // check hotspot status
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -99,7 +100,7 @@ export default class Connections extends Component {
         <Switch
           style={{ paddingRight: 15 }}
           onChange={() => {
-            if (hotspot) {
+            if (!hotspot) {
               Hotspot.enable(
                 () => {
                   console.log('Hotspot Enabled')
