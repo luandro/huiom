@@ -39,6 +39,7 @@ export default class Recording extends Component {
 
   render () {
     const { fileData, isRecording } = this.state
+    const { navigation } = this.props
     return (
       <View style={{ flexGrow: 4 }}>
         <View style={{ flexGrow: 3 }}>
@@ -48,18 +49,30 @@ export default class Recording extends Component {
             isRecording={isRecording}
           />
         </View>
-        {<View style={{ flexGrow: 1, flexDirection: 'row', justifyContent: 'space-around', opacity: fileData ? 1 : 0 }}>
-          <Button
-            disabled={isRecording}
-            title='Cancel'
-            onPress={() => deleteAudio(fileData)}
-          />
-          <Button
-            title='Publish'
-            disabled={!fileData}
-            onPress={() => publishAudio(fileData)}
-          />
-        </View>}
+        {
+          <View
+            style={{
+              flexGrow: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              opacity: fileData ? 1 : 0
+            }}
+          >
+            <Button
+              disabled={isRecording}
+              title='Cancel'
+              onPress={() => deleteAudio(fileData)}
+            />
+            <Button
+              title='Publish'
+              disabled={!fileData}
+              onPress={() => {
+                publishAudio(fileData)
+                navigation.goBack()
+              }}
+            />
+          </View>
+        }
       </View>
     )
   }
