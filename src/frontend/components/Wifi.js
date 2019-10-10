@@ -7,13 +7,19 @@ import {
 } from 'react-native'
 import wifi from 'react-native-android-wifi'
 import Hotspot from 'react-native-wifi-hotspot'
+const hotspotConfig = {
+  SSID: 'HUIOM',
+  password: 'HUIOM',
+  authAlgorithms: Hotspot.auth.OPEN,
+  protocols: Hotspot.protocols.WPA
+}
 
 export default class Connections extends Component {
   constructor () {
     super()
     this.state = {
       wifiStatus: null,
-      hotspot: null
+      hotspotStatus: null
     }
     this.handleWifi = this.handleWifi.bind(this)
   }
@@ -80,7 +86,7 @@ export default class Connections extends Component {
   }
 
   render () {
-    const { wifiStatus, hotspot } = this.state
+    const { wifiStatus, hotspotStatus } = this.state
     return (
       <View
         style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 15 }}
@@ -100,8 +106,9 @@ export default class Connections extends Component {
         <Switch
           style={{ paddingRight: 15 }}
           onChange={() => {
-            if (!hotspot) {
+            if (!hotspotStatus) {
               Hotspot.enable(
+                hotspotConfig,
                 () => {
                   console.log('Hotspot Enabled')
                 },
@@ -119,11 +126,11 @@ export default class Connections extends Component {
                 }
               )
             }
-            this.setState({ hotspot: !hotspot })
+            this.setState({ hotspotStatus: !hotspotStatus })
           }}
           thumbColor='#000'
           trackColor='#f1f1'
-          value={hotspot}
+          value={hotspotStatus}
         />
       </View>
     )
