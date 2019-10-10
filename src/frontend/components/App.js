@@ -46,7 +46,10 @@ class App extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (prevState.profile !== this.state.profile && !this.state.profile.name) {
+    if (
+      prevState.profile !== this.state.profile &&
+      (!this.state.profile.name || !this.state.profile.image)
+    ) {
       // redirect to profile
       navigate('ProfileModal')
     }
@@ -130,7 +133,10 @@ export default function RootStackScreen () {
     <NavigationNativeContainer ref={navigationRef}>
       <RootStack.Navigator mode='modal' headerMode='none'>
         <RootStack.Screen name='Main' component={App} />
-        <RootStack.Screen name='ProfileModal' component={Profile} />
+        <RootStack.Screen
+          name='ProfileModal'
+          component={props => <Profile navigate={navigate} />}
+        />
       </RootStack.Navigator>
     </NavigationNativeContainer>
   )

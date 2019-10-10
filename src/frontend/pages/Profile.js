@@ -73,7 +73,6 @@ export default class Profile extends Component {
   reducer ({ type, payload }) {
     switch (type) {
       case 'whoami':
-        console.log('PAYLOAD', payload)
         this.setState({
           isLoading: false,
           isSaving: false,
@@ -103,8 +102,8 @@ export default class Profile extends Component {
       !isLoading &&
       (nextName.length || nextImage) &&
       (nextName !== currentName || nextImage !== currentImage)
-    console.log('c', currentImage)
-    console.log('n', nextImage)
+    // console.log('c', currentImage)
+    // console.log('n', nextImage)
     return (
       <ScrollView contentInsetAdjustmentBehavior='automatic'>
         <View style={{ padding: 5 }}>
