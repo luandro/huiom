@@ -23,17 +23,16 @@ export default class Feed extends Component {
     getFeed()
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    console.log(prevState, this.state)
-    if (
-      prevState.replicatedAt !== this.state.replicatedAt ||
-      prevState.feedUpdatedAt !== this.state.feedUpdatedAt
-    ) {
-      console.log('Lets update feed')
-      // Dirty hack to update
-      getFeed()
-    }
-  }
+  // componentDidUpdate (prevProps, prevState) {
+  //   if (
+  //     prevState.replicatedAt !== this.state.replicatedAt ||
+  //     prevState.feedUpdatedAt !== this.state.feedUpdatedAt
+  //   ) {
+  //     console.log('Lets update feed')
+  //     // Dirty hack to update
+  //     getFeed()
+  //   }
+  // }
   componentWillUnmount () {
     this.listener.remove() // solves setState on unmounted components!
   }

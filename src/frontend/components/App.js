@@ -4,7 +4,7 @@ import { View, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { whoami } from '../lib/utils'
+import { whoami, getFeed } from '../lib/utils'
 import Profile from '../pages/Profile'
 import Feed from '../pages/Feed'
 import Record from '../pages/Record'
@@ -58,6 +58,7 @@ class App extends Component {
       !this.state.replicating
     ) {
       this.setState({ replicating: true })
+      getFeed()
       setTimeout(() => {
         this.setState({ replicating: false, replicatedAt: Date.now() })
       }, 1000)
@@ -71,6 +72,10 @@ class App extends Component {
       case 'whoami':
         this.setState({ profile: payload })
         break
+      case 'replication':
+        this.setState({
+          replication: payload
+        })
       default:
     }
   }
@@ -79,29 +84,10 @@ class App extends Component {
     const { replicating } = this.state
     return (
       <View style={{ flexGrow: 1 }}>
-        <NavigationNativeContainer>
-          <MainStack.Navigator>
-            <MainStack.Screen
-              name='Feed'
-              component={Feed}
-              options={{
-                headerTitle: '',
-                headerLeft: () => <Connections />,
-                headerRight: () => <Wifi />
-              }}
-            />
-            <MainStack.Screen
-              name='Record'
-              component={props => <Record {...props} />}
-              options={{
-                headerTitle: ''
-              }}
-            />
-          </MainStack.Navigator>
-        </NavigationNativeContainer>
         {replicating && (
           <View
             style={{
+              zIndex: 99,
               backgroundColor: 'black',
               height: 30,
               width: 30,
@@ -123,6 +109,26 @@ class App extends Component {
             />
           </View>
         )}
+        <NavigationNativeContainer>
+          <MainStack.Navigator>
+            <MainStack.Screen
+              name='Feed'
+              component={Feed}
+              options={{
+                headerTitle: '',
+                headerLeft: () => <Connections />,
+                headerRight: () => <Wifi />
+              }}
+            />
+            <MainStack.Screen
+              name='Record'
+              component={props => <Record {...props} />}
+              options={{
+                headerTitle: ''
+              }}
+            />
+          </MainStack.Navigator>
+        </NavigationNativeContainer>
       </View>
     )
   }
