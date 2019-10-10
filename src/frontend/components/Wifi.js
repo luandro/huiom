@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import {
   View,
   TouchableHighlight,
-  Switch,
-  PermissionsAndroid
+  PermissionsAndroid,
+  StyleSheet
 } from 'react-native'
 import wifi from 'react-native-android-wifi'
 import Hotspot from 'react-native-wifi-hotspot'
@@ -22,6 +22,7 @@ export default class Connections extends Component {
       hotspotStatus: null
     }
     this.handleWifi = this.handleWifi.bind(this)
+    this.handleHotspot = this.handleHotspot.bind(this)
   }
   async componentDidMount () {
     // check hotspot status
@@ -85,6 +86,48 @@ export default class Connections extends Component {
     }
   }
 
+  handleHotspot () {
+    const { hotspotStatus } = this.state
+    if (!hotspotStatus) {
+      Hotspot.enable(
+        () => {
+          console.log('Hotspot Enabled')
+          this.setState({ hotspotStatus: true })
+          Hotspot.getConfig(
+            config => {
+              alert('Hotspot SSID: ' + config.ssid)
+            },
+            err => {
+              alert(err.toString())
+            }
+          )
+        },
+        err => {
+          // alert(err.toString())
+          Hotspot.disable(
+            () => {
+              console.log('Hotspot Disabled')
+              this.setState({ hotspotStatus: false })
+            },
+            err => {
+              alert(err.toString())
+            }
+          )
+        }
+      )
+    } else {
+      Hotspot.disable(
+        () => {
+          console.log('Hotspot Disabled')
+          this.setState({ hotspotStatus: false })
+        },
+        err => {
+          alert(err.toString())
+        }
+      )
+    }
+  }
+
   render () {
     const { wifiStatus, hotspotStatus } = this.state
     return (
@@ -95,44 +138,34 @@ export default class Connections extends Component {
           <TouchableHighlight onPress={this.handleWifi}>
             <View
               style={{
-                height: 25,
-                width: 25,
-                borderRadius: 25,
+                height: 35,
+                width: 35,
+                borderRadius: 35,
                 backgroundColor: wifiStatus === 'enabled' ? 'green' : 'red'
               }}
             />
           </TouchableHighlight>
         )}
-        <Switch
-          style={{ paddingRight: 15 }}
-          onChange={() => {
-            if (!hotspotStatus) {
-              Hotspot.enable(
-                hotspotConfig,
-                () => {
-                  console.log('Hotspot Enabled')
-                },
-                err => {
-                  console.log(err.toString())
-                }
-              )
-            } else {
-              Hotspot.disable(
-                () => {
-                  console.log('Hotspot Disabled')
-                },
-                err => {
-                  console.log(err.toString())
-                }
-              )
-            }
-            this.setState({ hotspotStatus: !hotspotStatus })
-          }}
-          thumbColor='#000'
-          trackColor='#f1f1'
-          value={hotspotStatus}
-        />
+        <TouchableHighlight onPress={this.handleHotspot}>
+          <View
+            style={{
+              marginLeft: 15,
+              height: 35,
+              width: 35,
+              borderRadius: 35,
+              backgroundColor: hotspotStatus ? 'blue' : 'grey'
+            }}
+          />
+        </TouchableHighlight>
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  networkButton: {
+    height: 25,
+    width: 25,
+    borderRadius: 25
+  }
+})
