@@ -60,14 +60,14 @@ export default class Recording extends Component {
           >
             <Button
               disabled={isRecording}
-              title='Cancel'
+              icon={require('../assets/cancel.png')}
               onPress={() => {
                 deleteAudio(fileData)
                 navigation.goBack()
               }}
             />
             <Button
-              title='Publish'
+              icon={require('../assets/check.png')}
               disabled={!fileData}
               onPress={() => {
                 publishAudio(fileData)
