@@ -4,13 +4,14 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   Image,
-  StyleSheet
+  StyleSheet,
+  TouchableHighlight
 } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
 import ImagePicker from 'react-native-image-picker'
 import { whoami, setProfile } from '../lib/utils'
+import Button from '../components/Button'
 
 const options = {
   title: 'Select image',
@@ -106,8 +107,7 @@ export default class Profile extends Component {
     // console.log('n', nextImage)
     return (
       <ScrollView contentInsetAdjustmentBehavior='automatic'>
-        <View style={{ padding: 5 }}>
-          <Text>Name</Text>
+        <View style={{ padding: 50 }}>
           <TextInput
             value={isLoading ? 'loading...' : nextName}
             style={styles.textInput}
@@ -120,16 +120,19 @@ export default class Profile extends Component {
               source={{ uri: nextImage || currentImage }}
             />
           ) : (
-            <View style={styles.image} />
+            <TouchableHighlight
+              onPress={this.handleImage}
+              underlayColor={'transparent'}
+            >
+              <Image
+                style={styles.image}
+                source={require('../assets/add_image.png')}
+              />
+            </TouchableHighlight>
           )}
-          <Button
-            title={'Add image'}
-            // disabled={isSaving || !canPublish}
-            onPress={this.handleImage}
-          />
 
           <Button
-            title={isSaving ? 'Saving...' : 'Save'}
+            icon={require('../assets/check.png')}
             disabled={isSaving || !canPublish}
             onPress={this.save}
           />
@@ -150,6 +153,8 @@ export default class Profile extends Component {
 
 const styles = StyleSheet.create({
   textInput: {
+    paddingLeft: 15,
+    borderRadius: 15,
     fontSize: 20,
     borderWidth: 1,
     borderBottomColor: '#000',
@@ -159,7 +164,6 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     alignSelf: 'center',
     height: 200,
-    width: 200,
-    backgroundColor: 'grey'
+    width: 200
   }
 })
