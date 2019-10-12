@@ -58,21 +58,7 @@ export default class Connections extends Component {
       }
     })
   }
-  componentDidUpdate (prevProps, prevState) {
-    if (prevState.wifiStatus !== this.state.wifiStatus) {
-      wifi.isEnabled(isEnabled => {
-        if (isEnabled) {
-          this.setState({
-            wifiStatus: 'enabled'
-          })
-        } else {
-          this.setState({
-            wifiStatus: 'disabled'
-          })
-        }
-      })
-    }
-  }
+
   handleWifi () {
     const { wifiStatus } = this.state
     if (wifiStatus === 'disabled') {
@@ -135,6 +121,7 @@ export default class Connections extends Component {
 
   render () {
     const { wifiStatus, hotspotStatus } = this.state
+    console.log('wifiStatus', wifiStatus)
     return (
       <View
         style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 15 }}
