@@ -17,7 +17,7 @@ export default ({ action }) => (
         style={{
           height: 40,
           width: 24,
-          marginLeft: 5
+          marginLeft: 7
         }}
       />
     )}

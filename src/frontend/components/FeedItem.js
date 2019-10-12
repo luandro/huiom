@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, TouchableHighlight } from 'react-native'
+import { View, StyleSheet, Text, TouchableHighlight, Image } from 'react-native'
 import TrackPlayer from 'react-native-track-player'
 import Avatar from './Avatar'
 import PlayButton from './PlayButton'
@@ -86,19 +86,40 @@ export default class FeedItem extends Component {
         marginVertical: 5,
         paddingHorizontal: 5,
         paddingVertical: 10,
-        backgroundColor: colors.light
+        backgroundColor: colors.light,
+        borderRadius: 15
       },
       container: {
+        alignSelf: 'center',
         paddingHorizontal: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '85%'
       },
-
       track: {
         width: '62%',
         flexDirection: 'column',
         justifyContent: 'flex-end'
+      },
+      circle: {
+        height: 50,
+        width: 50,
+        borderRadius: 50,
+        backgroundColor: colors.color3
+      },
+      speak: {
+        alignSelf: 'center',
+        height: 40,
+        width: 24,
+        marginLeft: 10,
+        marginTop: 5
+      },
+      info: {
+        alignSelf: 'center',
+        width: '85%',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
       }
     })
     return (
@@ -117,12 +138,22 @@ export default class FeedItem extends Component {
             stop={this._stopPlay}
             isPlaying={isPlaying}
           />
-          <View style={styles.track}>
-            {/* <Slider disabled /> */}
-            <Text style={{ alignSelf: 'flex-end' }}>{duration}s</Text>
-          </View>
+          <TouchableHighlight
+            onPress={gotoThread}
+            underlayColor={'transparent'}
+          >
+            <View style={styles.circle}>
+              <Image
+                source={require('../assets/speak.png')}
+                style={styles.speak}
+              />
+            </View>
+          </TouchableHighlight>
         </View>
-        <Text>{publishedAt}</Text>
+        <View style={styles.info}>
+          <Text style={{ alignSelf: 'flex-start' }}>{publishedAt}</Text>
+          <Text style={{ alignSelf: 'flex-end' }}>{duration}s</Text>
+        </View>
       </View>
     )
   }
