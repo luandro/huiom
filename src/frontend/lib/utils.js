@@ -6,6 +6,7 @@ export const dispatch = action => {
 }
 
 export const whoami = () => dispatch({ type: 'whoami' })
+export const about = payload => dispatch({ type: 'about', payload })
 
 export const getFeed = () => dispatch({ type: 'getFeed' })
 

@@ -73,7 +73,7 @@ export default class Feed extends Component {
           data={feed}
           renderItem={({ item }) => {
             // console.log(item)
-            const { author, image, content, timestamp } = item.value
+            const { author, image, content, timestamp, key } = item.value
             return (
               <FeedItem
                 author={author}
@@ -81,6 +81,10 @@ export default class Feed extends Component {
                 filePath={`http://localhost:26835/${content.blob}`}
                 duration={content.duration}
                 timestamp={timestamp}
+                gotoProfile={() =>
+                  navigation.navigate('Profile', { id: author })
+                }
+                gotoThread={() => navigation.navigate('Profile', { key })}
               />
             )
           }}

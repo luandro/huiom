@@ -121,7 +121,6 @@ export default class Connections extends Component {
 
   render () {
     const { wifiStatus, hotspotStatus } = this.state
-    console.log('wifiStatus', wifiStatus)
     return (
       <View
         style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 15 }}

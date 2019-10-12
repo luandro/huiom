@@ -102,6 +102,21 @@ module.exports = (sbot, appDataDir) => {
           })
         })
         break
+      case 'about':
+        getName(sbot, payload, (nameErr, name) => {
+          if (nameErr) return console.error('ssb:', nameErr)
+          getImage(sbot, payload, (imageErr, image) => {
+            if (imageErr) return cb(imageErr)
+            commit({
+              type: 'about',
+              payload: {
+                name,
+                image: image ? toUrl(image) : null
+              }
+            })
+          })
+        })
+        break
 
       case 'doFollow':
         var followMsg = { type: 'contact', contact: payload, following: true }

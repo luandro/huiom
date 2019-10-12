@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/core'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { whoami, getFeed } from '../lib/utils'
+import EditProfile from '../pages/EditProfile'
 import Profile from '../pages/Profile'
 import Feed from '../pages/Feed'
 import Record from '../pages/Record'
@@ -127,6 +128,13 @@ class App extends Component {
                 headerTitle: ''
               }}
             />
+            <MainStack.Screen
+              name='Profile'
+              component={Profile}
+              options={{
+                headerTitle: ''
+              }}
+            />
           </MainStack.Navigator>
         </NavigationNativeContainer>
       </View>
@@ -141,7 +149,7 @@ export default function RootStackScreen () {
         <RootStack.Screen name='Main' component={App} />
         <RootStack.Screen
           name='ProfileModal'
-          component={props => <Profile navigate={navigate} />}
+          component={props => <EditProfile navigate={navigate} />}
         />
       </RootStack.Navigator>
     </NavigationNativeContainer>

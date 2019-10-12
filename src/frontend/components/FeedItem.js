@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, TouchableHighlight } from 'react-native'
 import TrackPlayer from 'react-native-track-player'
 import Avatar from './Avatar'
 import PlayButton from './PlayButton'
@@ -71,7 +71,14 @@ export default class FeedItem extends Component {
   }
 
   render () {
-    const { duration, timestamp, author, image } = this.props
+    const {
+      duration,
+      timestamp,
+      author,
+      image,
+      gotoProfile,
+      gotoThread
+    } = this.props
     const { isPlaying, error, position } = this.state
     const publishedAt = new Date(timestamp).toLocaleDateString()
     const styles = StyleSheet.create({
@@ -97,7 +104,12 @@ export default class FeedItem extends Component {
     return (
       <View style={styles.wrapper}>
         <View style={styles.container}>
-          <Avatar source={image} />
+          <TouchableHighlight
+            onPress={gotoProfile}
+            underlayColor={'transparent'}
+          >
+            <Avatar source={image} />
+          </TouchableHighlight>
           <PlayButton
             size={20}
             circular
