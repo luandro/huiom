@@ -3,6 +3,7 @@ import { View, Text } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
 import Pulse from 'react-native-pulse'
 import Avatar from './Avatar'
+import colors from '../lib/colors'
 
 export default class Connections extends Component {
   constructor () {
@@ -78,7 +79,7 @@ export default class Connections extends Component {
                 {peer[1].type === 'pub' && (
                   <View
                     style={{
-                      backgroundColor: 'red',
+                      backgroundColor: colors.color1,
                       height: 50,
                       width: 50,
                       borderRadius: 50
@@ -86,9 +87,10 @@ export default class Connections extends Component {
                   >
                     <Text
                       style={{
+                        textTransform: 'uppercase',
                         alignSelf: 'center',
                         paddingTop: 13,
-                        color: 'white'
+                        color: colors.light
                       }}
                     >
                       pub

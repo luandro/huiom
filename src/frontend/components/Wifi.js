@@ -3,10 +3,12 @@ import {
   View,
   TouchableHighlight,
   PermissionsAndroid,
-  StyleSheet
+  StyleSheet,
+  Image
 } from 'react-native'
 import wifi from 'react-native-android-wifi'
 import Hotspot from 'react-native-wifi-hotspot'
+import colors from '../lib/colors'
 const hotspotConfig = {
   SSID: 'HUIOM',
   password: 'HUIOM',
@@ -92,7 +94,10 @@ export default class Connections extends Component {
       Hotspot.enable(
         () => {
           console.log('Hotspot Enabled')
-          this.setState({ hotspotStatus: true })
+          this.setState({
+            hotspotStatus: true,
+            wifiStatus: 'disabled'
+          })
           Hotspot.getConfig(
             config => {
               alert('Hotspot SSID: ' + config.ssid)
@@ -135,27 +140,50 @@ export default class Connections extends Component {
         style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 15 }}
       >
         {wifiStatus && (
-          <TouchableHighlight onPress={this.handleWifi}>
+          <TouchableHighlight
+            onPress={this.handleWifi}
+            underlayColor={'transparent'}
+          >
             <View
               style={{
                 height: 35,
                 width: 35,
                 borderRadius: 35,
-                backgroundColor: wifiStatus === 'enabled' ? 'green' : 'red'
+                paddingTop: 7,
+                backgroundColor:
+                  wifiStatus === 'enabled' ? colors.color1 : colors.color2
               }}
-            />
+            >
+              <Image
+                style={styles.wifiIcon}
+                source={
+                  wifiStatus !== 'enabled'
+                    ? require('../assets/no_wifi.png')
+                    : require('../assets/wifi_on.png')
+                }
+              />
+            </View>
           </TouchableHighlight>
         )}
-        <TouchableHighlight onPress={this.handleHotspot}>
+        <TouchableHighlight
+          onPress={this.handleHotspot}
+          underlayColor={'transparent'}
+        >
           <View
             style={{
               marginLeft: 15,
               height: 35,
               width: 35,
               borderRadius: 35,
-              backgroundColor: hotspotStatus ? 'blue' : 'grey'
+              paddingTop: 7,
+              backgroundColor: hotspotStatus ? colors.color1 : colors.color2
             }}
-          />
+          >
+            <Image
+              style={styles.hotspotIcon}
+              source={require('../assets/hotspot.png')}
+            />
+          </View>
         </TouchableHighlight>
       </View>
     )
@@ -167,5 +195,15 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
     borderRadius: 25
+  },
+  wifiIcon: {
+    width: 25,
+    height: 20,
+    alignSelf: 'center'
+  },
+  hotspotIcon: {
+    width: 30,
+    height: 20,
+    alignSelf: 'center'
   }
 })
