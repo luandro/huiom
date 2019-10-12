@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Platform
+  Platform,
+  ActivityIndicator
   // PermissionsAndroid
 } from 'react-native'
 import { AudioRecorder, AudioUtils } from 'react-native-audio'
@@ -23,6 +24,7 @@ class Recorder extends Component {
       isPaused: false,
       isStopped: false,
       isProcessing: false,
+      isPlaying: false,
       isFinished: false // not really used?
     }
   }
@@ -135,11 +137,17 @@ class Recorder extends Component {
 
       // Starts playing it
       TrackPlayer.play()
+      this.setState({
+        isPlaying: true
+      })
     })
   }
 
   async _stopPlay () {
     TrackPlayer.stop()
+    this.setState({
+      isPlaying: false
+    })
   }
 
   async _record () {
@@ -211,7 +219,7 @@ class Recorder extends Component {
       return (
         <View style={styles.container}>
           <View style={styles.controls}>
-            <Text>Processing...</Text>
+            <ActivityIndicator />
           </View>
         </View>
       )
