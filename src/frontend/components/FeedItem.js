@@ -138,17 +138,19 @@ export default class FeedItem extends Component {
             stop={this._stopPlay}
             isPlaying={isPlaying}
           />
-          <TouchableHighlight
-            onPress={gotoThread}
-            underlayColor={'transparent'}
-          >
-            <View style={styles.circle}>
-              <Image
-                source={require('../assets/speak.png')}
-                style={styles.speak}
-              />
-            </View>
-          </TouchableHighlight>
+          {gotoThread && (
+            <TouchableHighlight
+              onPress={gotoThread}
+              underlayColor={'transparent'}
+            >
+              <View style={styles.circle}>
+                <Image
+                  source={require('../assets/speak.png')}
+                  style={styles.speak}
+                />
+              </View>
+            </TouchableHighlight>
+          )}
         </View>
         <View style={styles.info}>
           <Text style={{ alignSelf: 'flex-start' }}>{publishedAt}</Text>

@@ -18,9 +18,12 @@ export default class Feed extends Component {
     this.reducer.bind(this)
   }
   componentDidMount () {
-    this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
+    const {
+      route: { params }
+    } = this.props
     console.log('Lets get feed')
-    getFeed()
+    getFeed(params ? params.key : null)
+    this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
   }
 
   // componentDidUpdate (prevProps, prevState) {
@@ -63,8 +66,12 @@ export default class Feed extends Component {
     }
   }
   render () {
-    const { navigation } = this.props
+    const {
+      navigation,
+      route: { params }
+    } = this.props
     const { isLoading, feed } = this.state
+    console.log('this.p', this.props)
     return (
       <View style={{ flex: 1, width: '100%' }}>
         <FlatList
@@ -72,8 +79,8 @@ export default class Feed extends Component {
           onRefresh={this.handleRefresh}
           data={feed}
           renderItem={({ item }) => {
-            // console.log(item)
-            const { author, image, content, timestamp, key } = item.value
+            const key = item.key
+            const { author, image, content, timestamp } = item.value
             return (
               <FeedItem
                 author={author}
@@ -84,14 +91,20 @@ export default class Feed extends Component {
                 gotoProfile={() =>
                   navigation.navigate('Profile', { id: author })
                 }
-                gotoThread={() => navigation.navigate('Profile', { key })}
+                gotoThread={
+                  !params ? () => navigation.navigate('Thread', { key }) : false
+                }
               />
             )
           }}
           style={{ padding: 10 }}
           keyExtractor={(item, index) => item.key}
         />
-        <ActionButton action={() => navigation.navigate('Record')} />
+        <ActionButton
+          action={() =>
+            navigation.navigate('Record', params ? { key: params.key } : null)
+          }
+        />
       </View>
     )
   }

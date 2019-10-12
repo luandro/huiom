@@ -135,6 +135,13 @@ class App extends Component {
                 headerTitle: ''
               }}
             />
+            <MainStack.Screen
+              name='Thread'
+              component={Feed}
+              options={{
+                headerTitle: ''
+              }}
+            />
           </MainStack.Navigator>
         </NavigationNativeContainer>
       </View>

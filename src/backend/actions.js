@@ -63,8 +63,11 @@ module.exports = (sbot, appDataDir) => {
         break
 
       case 'getFeed':
+        const feed = payload
+          ? sbot.threads.thread({ root: payload, allowlist: ['audio'] })
+          : sbot.messagesByType({ type: 'audio', reverse: true })
         pull(
-          sbot.messagesByType({ type: 'audio', reverse: true }),
+          feed,
           pull.filter(isAudio),
           pullParaMap(
             (msg, cb) => {
