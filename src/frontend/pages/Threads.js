@@ -62,7 +62,6 @@ export default class Threads extends Component {
   render () {
     const { navigation } = this.props
     const { isLoading, feed } = this.state
-    console.log('TCL: render -> feed', feed)
     return (
       <View style={{ flex: 1, width: '100%' }}>
         {feed && (

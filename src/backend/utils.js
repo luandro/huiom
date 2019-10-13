@@ -12,11 +12,10 @@ const getName = (sbot, feedId, cb) => {
 const mutateMsgWithExtras = sbot => {
   const getAbout = sbot.about.socialValue
   return async (msg, cb) => {
-    const nameOpts = { key: 'media', dest: msg.value.author }
-    const [e1, image] = await runAsync(getAbout)(nameOpts)
-    if (e1) return cb(e1)
+    const nameOpts = { key: 'image', dest: msg.value.author }
+    const [error, image] = await runAsync(getAbout)(nameOpts)
+    if (error) return cb(error)
     msg.value.content.image = toUrl(image)
-    console.log('REsolving with img', msg)
     cb(null, msg)
   }
 }
@@ -31,36 +30,5 @@ module.exports = {
     }
   },
   getImage,
-  getName,
-  threadWithImage2: sbot => {
-    return async function (thread, cb) {
-      let newList = {
-        messages: []
-      }
-      Promise.all(
-        thread.messages.map((msg, k) =>
-          sbot.about.socialValue(
-            { key: 'image', dest: msg.value.author },
-            (err, image) => {
-              console.log('TCL: image', image)
-              if (err) return cb(err)
-              msg.value.content.image = toUrl(image)
-              return newList.messages.push(msg)
-            }
-          )
-        )
-      ).then(i => {
-        console.log('FINISHED', i)
-        cb(null, newList)
-      })
-    }
-  },
-  threadWithImage: sbot => {
-    return async (thread, cb) => {
-      for (const msg of thread.messages) {
-        await runAsync(mutateMsgWithExtras(sbot))(msg)
-      }
-      cb(null, thread)
-    }
-  }
+  getName
 }
