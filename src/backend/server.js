@@ -77,4 +77,6 @@ if (!process.env.DESKTOP) {
   require('./streams')(sbot, appDataDir)
   // NOTE could send a message to front-end saying "READY"
   // to tell UI it's sage to launch + start requesting things
+} else {
+  require('./test')(sbot)
 }

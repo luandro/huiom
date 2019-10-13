@@ -7,7 +7,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { whoami, getFeed } from '../lib/utils'
 import EditProfile from '../pages/EditProfile'
 import Profile from '../pages/Profile'
-import Feed from '../pages/Feed'
+import Thread from '../pages/Thread'
+import Threads from '../pages/Threads'
 import Record from '../pages/Record'
 import Connections from './Connections'
 import Wifi from './Wifi'
@@ -113,8 +114,8 @@ class App extends Component {
         <NavigationNativeContainer>
           <MainStack.Navigator>
             <MainStack.Screen
-              name='Feed'
-              component={Feed}
+              name='Threads'
+              component={Threads}
               options={{
                 headerTitle: '',
                 headerLeft: () => <Connections />,
@@ -137,7 +138,7 @@ class App extends Component {
             />
             <MainStack.Screen
               name='Thread'
-              component={Feed}
+              component={Thread}
               options={{
                 headerTitle: ''
               }}

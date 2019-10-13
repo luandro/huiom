@@ -5,9 +5,36 @@ const pullParaMap = require('pull-paramap')
 const fs = require('fs')
 const { isAudio } = require('ssb-audio-schema')
 const toUrl = require('ssb-serve-blobs/id-to-url')
-const { commit, getImage, getName } = require('./utils')
+const { commit, getImage, getName, threadWithImage } = require('./utils')
 
 const getAccFile = filePath => filePath.split('.opus')[0] + '.aac'
+
+// function threadWithImage (sbot) {
+//   return async (thread, cb) => {
+//     console.log('thread on threadWithImage========> ', thread)
+//     try {
+//       const newThread = async () => {
+//         let newList = {
+//           messages: []
+//         }
+//         await Promise.all((resolve, reject) =>
+//           thread.messages.map((msg, k) => {
+//             getImage(sbot, msg.value.author, (err, image) => {
+//               if (err) reject('ERR on threadWithImage', err)
+//               console.log(msg.value.author, image)
+//               msg.value.content.image = toUrl(image)
+//               resolve(newList.messages.push(msg))
+//             })
+//           })
+//         )
+//         return newList
+//       }
+//       cb(null, await newThread())
+//     } catch (err) {
+//       console.log('Error threadWithImage', err)
+//     }
+//   }
+// }
 
 module.exports = (sbot, appDataDir) => {
   sbot.conn.start() // is this needed?
@@ -19,7 +46,7 @@ module.exports = (sbot, appDataDir) => {
     console.log('Got action', type, payload)
     switch (type) {
       case 'publishAudioFile':
-        var { filePath, duration, size } = payload
+        let { filePath, duration, size, root, branch } = payload
         if (isNaN(size)) {
           size = fs.statSync(filePath).size
         }
@@ -29,12 +56,14 @@ module.exports = (sbot, appDataDir) => {
           sbot.blobs.add((err, hash) => {
             if (err) return console.error('SSB:', err)
 
-            var content = {
+            const content = {
               type: 'audio',
               blob: hash, // the hash-id of the blob
               format: 'opus',
               duration,
-              size
+              size,
+              root,
+              branch
             }
             sbot.publish(content, (err, value) => {
               fs.unlink(filePath, err => console.log('SSB: unlink', err))
@@ -63,30 +92,34 @@ module.exports = (sbot, appDataDir) => {
         break
 
       case 'getFeed':
-        const feed = payload
-          ? sbot.threads.thread({ root: payload, allowlist: ['audio'] })
-          : sbot.messagesByType({ type: 'audio', reverse: true })
-        pull(
-          feed,
-          pull.filter(isAudio),
-          pullParaMap(
-            (msg, cb) => {
-              getImage(sbot, msg.value.author, (err, image) => {
-                if (err) return cb(err)
-
-                msg.value.image = toUrl(image)
-                cb(null, msg)
-              })
-            },
-            4 // max number of parallel queries paraMap can do
-          ),
-          pull.take(100),
-          pull.collect((err, data) => {
-            if (err) return console.error(err)
-            console.log('DATA =====>', data)
-            commit({ type: 'feed', payload: data })
-          })
-        )
+        if (payload) {
+          pull(
+            sbot.threads.thread({
+              root: payload,
+              allowlist: ['audio']
+            }),
+            pull.asyncMap(threadWithImage(sbot)),
+            pull.collect((err, data) => {
+              if (err) return console.error(err)
+              console.log('DATA =====>', data)
+              commit({ type: 'feed', payload: data })
+            })
+          )
+        } else {
+          pull(
+            sbot.threads.public({
+              limit: 100,
+              reverse: true,
+              allowlist: ['audio']
+            }),
+            pull.asyncMap(threadWithImage(sbot)),
+            pull.collect((err, data) => {
+              if (err) return console.error(err)
+              console.log('DATA =====>', data)
+              commit({ type: 'feed', payload: data })
+            })
+          )
+        }
         break
 
       case 'whoami':

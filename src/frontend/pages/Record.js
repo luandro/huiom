@@ -39,7 +39,10 @@ export default class Recording extends Component {
 
   render () {
     const { fileData, isRecording } = this.state
-    const { navigation } = this.props
+    const {
+      navigation,
+      route: { params }
+    } = this.props
     return (
       <View style={{ flexGrow: 4 }}>
         <View style={{ flexGrow: 3 }}>
@@ -70,7 +73,11 @@ export default class Recording extends Component {
               icon={require('../assets/check.png')}
               disabled={!fileData}
               onPress={() => {
-                publishAudio(fileData)
+                if (params) {
+                  publishAudio({ ...fileData, ...params })
+                } else {
+                  publishAudio(fileData)
+                }
                 navigation.goBack()
               }}
             />

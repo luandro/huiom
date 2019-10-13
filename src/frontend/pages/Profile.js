@@ -48,7 +48,6 @@ export default class Profile extends Component {
 
   render () {
     const { isLoading, name, image } = this.state
-    console.log('TCL: render -> this.state', this.state)
     return (
       <ScrollView contentInsetAdjustmentBehavior='automatic'>
         <View style={{ padding: 5 }}>
