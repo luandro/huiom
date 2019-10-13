@@ -77,21 +77,32 @@ export default class FeedItem extends Component {
       author,
       image,
       gotoProfile,
-      gotoThread
+      gotoThread,
+      threadLength,
+      margin,
+      roundTop,
+      roundBottom,
+      borderTop,
+      borderBottom
     } = this.props
     const { isPlaying, error, position } = this.state
     const publishedAt = new Date(timestamp).toLocaleDateString()
     const styles = StyleSheet.create({
       wrapper: {
-        marginVertical: 5,
-        paddingHorizontal: 5,
-        paddingVertical: 10,
+        borderColor: colors.color1,
+        borderBottomWidth: borderBottom ? 1 : 0,
+        borderTopWidth: borderTop ? 1 : 0,
+        marginVertical: margin ? 5 : 0,
+        paddingVertical: 15,
         backgroundColor: colors.light,
-        borderRadius: 15
+        borderTopStartRadius: roundTop ? 7 : 0,
+        borderTopEndRadius: roundTop ? 7 : 0,
+        borderBottomStartRadius: roundBottom ? 7 : 0,
+        borderBottomEndRadius: roundBottom ? 7 : 0
       },
       container: {
         alignSelf: 'center',
-        paddingHorizontal: 15,
+        paddingHorizontal: 5,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -120,8 +131,22 @@ export default class FeedItem extends Component {
         width: '85%',
         flexDirection: 'row',
         justifyContent: 'space-between'
+      },
+      threadLength: {
+        height: 25,
+        width: 25,
+        backgroundColor: colors.color2,
+        alignSelf: 'flex-end',
+        top: -7,
+        left: -30
+      },
+      threadLengthText: {
+        alignSelf: 'center',
+        color: colors.light,
+        marginTop: 3
       }
     })
+    const showLength = threadLength > 1
     return (
       <View style={styles.wrapper}>
         <View style={styles.container}>
@@ -148,6 +173,11 @@ export default class FeedItem extends Component {
                 source={require('../assets/speak.png')}
                 style={styles.speak}
               />
+              {showLength && (
+                <View style={[styles.circle, styles.threadLength]}>
+                  <Text style={styles.threadLengthText}>{threadLength}</Text>
+                </View>
+              )}
             </View>
           </TouchableHighlight>
         </View>

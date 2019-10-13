@@ -8,6 +8,7 @@
   "dependencies": {
     "chloride": "^2.2.14",
     "multiserver-address": "^1.0.1",
+    "promisify-tuple": "^1.0.0",
     "pull-file": "^1.1.0",
     "pull-paramap": "^1.2.2",
     "pull-stream": "^3.6.14",

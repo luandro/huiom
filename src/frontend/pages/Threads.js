@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { View, FlatList } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
-import FeedItem from '../components/FeedItem'
-import Thread from '../components/ThreadItem'
+import Message from '../components/Message'
+import ThreadItem from '../components/ThreadItem'
 import ActionButton from '../components/ActionButton'
 import { getFeed } from '../lib/utils'
 
-export default class Feed extends Component {
+export default class Threads extends Component {
   constructor () {
     super()
     this.state = {
@@ -56,9 +56,6 @@ export default class Feed extends Component {
         this.setState({
           replication: payload
         })
-      case 'whoami':
-        this.setState({ profile: payload })
-        break
       default:
     }
   }
@@ -76,7 +73,7 @@ export default class Feed extends Component {
             renderItem={({ item }) => {
               const branch = item.messages[0] ? item.messages[0].key : null
               return (
-                <Thread
+                <ThreadItem
                   messages={item.messages}
                   navigate={navigation.navigate}
                   root={branch}

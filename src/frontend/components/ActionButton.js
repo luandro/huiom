@@ -6,16 +6,17 @@ export default ({ action }) => (
   <FAB
     style={{
       position: 'absolute',
-      bottom: 5,
-      right: 5
+      bottom: 0,
+      right: 0
     }}
+    size={80}
     buttonColor='rgba(231,76,60,1)'
     onPress={action}
     renderIcon={active => (
       <Image
         source={require('../assets/speak.png')}
         style={{
-          height: 40,
+          height: 50,
           width: 24,
           marginLeft: 7
         }}

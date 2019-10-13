@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, TouchableHighlight } from 'react-native'
-import FeedItem from './FeedItem'
+import { View, TouchableHighlight, Text } from 'react-native'
+import Message from './Message'
 import Avatar from './Avatar'
 import colors from '../lib/colors'
 
@@ -19,8 +19,15 @@ export default ({ messages, navigate, root, branch }) => {
       }, [])
       .filter((i, key) => key !== 0)
     return (
-      <View>
-        <FeedItem
+      <View
+        style={{
+          marginVertical: 15
+        }}
+      >
+        <Message
+          roundTop
+          roundBottom={messages.length < 2}
+          borderBottom={messages.length > 1}
           author={author}
           image={content.image}
           filePath={`http://localhost:26835/${content.blob}`}
@@ -45,7 +52,6 @@ export default ({ messages, navigate, root, branch }) => {
           <View
             style={{
               backgroundColor: colors.light,
-              marginBottom: 15,
               flexDirection: 'row'
             }}
           >
@@ -54,6 +60,57 @@ export default ({ messages, navigate, root, branch }) => {
             ))}
           </View>
         </TouchableHighlight>
+        {messages.length > 2 && (
+          <View>
+            <View
+              style={{
+                backgroundColor: colors.light,
+                width: '100%',
+                height: 18
+              }}
+            />
+            <Text
+              style={{
+                position: 'absolute',
+                fontSize: 15,
+                backgroundColor: colors.color3,
+                color: colors.light,
+                height: 30,
+                width: 30,
+                borderRadius: 15,
+                zIndex: 99,
+                textAlign: 'center',
+                textAlignVertical: 'center',
+                right: '45%',
+                top: -6
+              }}
+            >
+              +{messages.length - 2}
+            </Text>
+          </View>
+        )}
+        {messages.length > 1 && (
+          <Message
+            borderTop
+            roundBottom
+            author={messages[messages.length - 1].value.author}
+            image={messages[messages.length - 1].value.content.image}
+            filePath={`http://localhost:26835/${content.blob}`}
+            duration={messages[messages.length - 1].value.content.duration}
+            timestamp={messages[messages.length - 1].value.timestamp}
+            gotoProfile={() =>
+              navigate('Profile', {
+                id: messages[messages.length - 1].value.author
+              })
+            }
+            gotoThread={() =>
+              navigate('Thread', {
+                root,
+                branch
+              })
+            }
+          />
+        )}
       </View>
     )
   } else {

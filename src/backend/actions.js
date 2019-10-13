@@ -9,33 +9,6 @@ const { commit, getImage, getName, threadWithImage } = require('./utils')
 
 const getAccFile = filePath => filePath.split('.opus')[0] + '.aac'
 
-// function threadWithImage (sbot) {
-//   return async (thread, cb) => {
-//     console.log('thread on threadWithImage========> ', thread)
-//     try {
-//       const newThread = async () => {
-//         let newList = {
-//           messages: []
-//         }
-//         await Promise.all((resolve, reject) =>
-//           thread.messages.map((msg, k) => {
-//             getImage(sbot, msg.value.author, (err, image) => {
-//               if (err) reject('ERR on threadWithImage', err)
-//               console.log(msg.value.author, image)
-//               msg.value.content.image = toUrl(image)
-//               resolve(newList.messages.push(msg))
-//             })
-//           })
-//         )
-//         return newList
-//       }
-//       cb(null, await newThread())
-//     } catch (err) {
-//       console.log('Error threadWithImage', err)
-//     }
-//   }
-// }
-
 module.exports = (sbot, appDataDir) => {
   sbot.conn.start() // is this needed?
   sbot.lan.start() // is this needed?

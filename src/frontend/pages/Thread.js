@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { View, FlatList } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
-import FeedItem from '../components/FeedItem'
-import Thread from '../components/ThreadItem'
+import FeedItem from '../components/Message'
 import ActionButton from '../components/ActionButton'
 import { getFeed } from '../lib/utils'
 
-export default class Feed extends Component {
+export default class Thread extends Component {
   constructor () {
     super()
     this.state = {
@@ -26,16 +25,20 @@ export default class Feed extends Component {
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
   }
 
-  // componentDidUpdate (prevProps, prevState) {
-  //   if (
-  //     prevState.replicatedAt !== this.state.replicatedAt ||
-  //     prevState.feedUpdatedAt !== this.state.feedUpdatedAt
-  //   ) {
-  //     console.log('Lets update feed')
-  //     // Dirty hack to update
-  //     getFeed()
-  //   }
-  // }
+  componentDidUpdate (prevProps, prevState) {
+    const {
+      route: { params }
+    } = this.props
+    if (
+      params &&
+      (prevState.replicatedAt !== this.state.replicatedAt ||
+        prevState.feedUpdatedAt !== this.state.feedUpdatedAt)
+    ) {
+      console.log('Lets update feed')
+      // Dirty hack to update
+      getFeed(params.root)
+    }
+  }
   componentWillUnmount () {
     this.listener.remove() // solves setState on unmounted components!
     getFeed()
@@ -63,9 +66,6 @@ export default class Feed extends Component {
         this.setState({
           replication: payload
         })
-      case 'whoami':
-        this.setState({ profile: payload })
-        break
       default:
     }
   }
@@ -87,11 +87,15 @@ export default class Feed extends Component {
               const { author, content, timestamp } = item.value
               return (
                 <FeedItem
+                  roundTop
+                  roundBottom
+                  margin
                   author={author}
-                  // image={content.image}
+                  image={content.image}
                   filePath={`http://localhost:26835/${content.blob}`}
                   duration={content.duration}
                   timestamp={timestamp}
+                  responses={3}
                   gotoProfile={() =>
                     navigation.navigate('Profile', { id: author })
                   }

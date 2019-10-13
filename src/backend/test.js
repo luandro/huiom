@@ -1,6 +1,7 @@
 const pull = require('pull-stream')
 // const pullParaMap = require('pull-paramap')
-const { threadWithImage } = require('./utils')
+const { getImage, threadWithImage } = require('./utils')
+const toUrl = require('ssb-serve-blobs/id-to-url')
 
 module.exports = sbot => {
   console.log('WHOAMI', sbot.whoami())
@@ -19,6 +20,9 @@ module.exports = sbot => {
     }
     sbot.publish(contentBranch, (err, valueBranch) => {
       // console.log('Pubished', valueBranch)
+      let newList = {
+        messages: []
+      }
       pull(
         // sbot.messagesByType({ type: testType, reverse: true }),
         // sbot.threads.public({
@@ -32,11 +36,10 @@ module.exports = sbot => {
           allowlist: [testType]
         }),
         pull.asyncMap(threadWithImage(sbot)),
-        pull.take(100),
-        pull.collect((err, threads) => {
+        pull.take(1),
+        pull.collect(async (err, threads) => {
           if (err) return console.error(err)
-          console.log('0-0000-----------000', threads[0])
-          // threads[0].map((t, key) => console.log(key, t.value.content))
+          console.log('Done 0-0000-----------000', threads)
         })
       )
     })
