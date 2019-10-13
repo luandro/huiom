@@ -30,5 +30,13 @@ module.exports = {
     }
   },
   getImage,
-  getName
+  getName,
+  threadWithImage: sbot => {
+    return async (thread, cb) => {
+      for (const msg of thread.messages) {
+        await runAsync(mutateMsgWithExtras(sbot))(msg)
+      }
+      cb(null, thread)
+    }
+  }
 }
