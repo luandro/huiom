@@ -4,6 +4,7 @@ import { View, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import SplashScreen from 'react-native-splash-screen'
 import { whoami, getFeed } from '../lib/utils'
 import EditProfile from '../pages/EditProfile'
 import Profile from '../pages/Profile'
@@ -38,6 +39,7 @@ class App extends Component {
     this.reducer.bind(this)
   }
   async componentDidMount () {
+    SplashScreen.hide()
     nodejs.start('loader.js')
     whoami()
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
