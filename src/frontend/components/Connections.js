@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableHighlight } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
 import Pulse from 'react-native-pulse'
 import Avatar from './Avatar'
@@ -52,6 +52,7 @@ export default class Connections extends Component {
   }
   render () {
     const { connectedPeers, stagedPeers, replicatingPeer } = this.state
+    const { gotoProfile } = this.props
     return (
       <View
         style={{
@@ -63,41 +64,46 @@ export default class Connections extends Component {
       >
         {connectedPeers &&
           connectedPeers.map((peer, key) => {
-            // console.log('PEER', key, peer)
             return (
-              <View key={peer[1].key} style={{ marginHorizontal: 5 }}>
-                {peer[1].key === replicatingPeer && (
-                  <Pulse
-                    color='green'
-                    numPulses={2}
-                    diameter={80}
-                    speed={10}
-                    duration={3000}
-                  />
-                )}
-                {peer[1].type === 'lan' && <Avatar source={peer[1].image} />}
-                {peer[1].type === 'pub' && (
-                  <View
-                    style={{
-                      backgroundColor: colors.color1,
-                      height: 50,
-                      width: 50,
-                      borderRadius: 50
-                    }}
-                  >
-                    <Text
+              <TouchableHighlight
+                key={peer[1].key}
+                underlayColor={'transparent'}
+                onPress={() => gotoProfile(peer[1].key)}
+              >
+                <View style={{ marginHorizontal: 5 }}>
+                  {peer[1].key === replicatingPeer && (
+                    <Pulse
+                      color='green'
+                      numPulses={2}
+                      diameter={80}
+                      speed={10}
+                      duration={3000}
+                    />
+                  )}
+                  {peer[1].type === 'lan' && <Avatar source={peer[1].image} />}
+                  {peer[1].type === 'pub' && (
+                    <View
                       style={{
-                        textTransform: 'uppercase',
-                        alignSelf: 'center',
-                        paddingTop: 13,
-                        color: colors.light
+                        backgroundColor: colors.color1,
+                        height: 50,
+                        width: 50,
+                        borderRadius: 50
                       }}
                     >
-                      pub
-                    </Text>
-                  </View>
-                )}
-              </View>
+                      <Text
+                        style={{
+                          textTransform: 'uppercase',
+                          alignSelf: 'center',
+                          paddingTop: 13,
+                          color: colors.light
+                        }}
+                      >
+                        pub
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </TouchableHighlight>
             )
           })}
       </View>

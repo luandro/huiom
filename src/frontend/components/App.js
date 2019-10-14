@@ -113,14 +113,18 @@ class App extends Component {
             />
           </View>
         )}
-        <NavigationNativeContainer>
+        <NavigationNativeContainer ref={navigationRef}>
           <MainStack.Navigator>
             <MainStack.Screen
               name='Threads'
               component={Threads}
               options={{
                 headerTitle: '',
-                headerLeft: () => <Connections />,
+                headerLeft: () => (
+                  <Connections
+                    gotoProfile={id => navigate('Profile', { id })}
+                  />
+                ),
                 headerRight: () => <Wifi />
               }}
             />
