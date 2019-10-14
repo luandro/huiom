@@ -7,17 +7,17 @@ import colors from '../lib/colors'
 export default ({ messages, navigate, root, branch }) => {
   if (messages[0]) {
     const { author, content, timestamp } = messages[0].value
-    const userList = messages
-      .reduce((prev, curr) => {
-        const exists = prev.filter(i => {
-          if (i && i.value.author === curr.value.author) return true
-          else return false
-        })
-        if (exists.length < 1) {
-          return prev.concat(curr)
-        } else return prev
-      }, [])
-      .filter((i, key) => key !== 0)
+    // const userList = messages
+    //   .reduce((prev, curr) => {
+    //     const exists = prev.filter(i => {
+    //       if (i && i.value.author === curr.value.author) return true
+    //       else return false
+    //     })
+    //     if (exists.length < 1) {
+    //       return prev.concat(curr)
+    //     } else return prev
+    //   }, [])
+    //   .filter((i, key) => key !== 0)
     return (
       <View
         style={{
@@ -55,9 +55,9 @@ export default ({ messages, navigate, root, branch }) => {
               flexDirection: 'row'
             }}
           >
-            {userList.map(i => (
+            {/* {userList.map(i => (
               <Avatar key={i.key} size={25} source={i.value.content.image} />
-            ))}
+            ))} */}
           </View>
         </TouchableHighlight>
         {messages.length > 2 && (
