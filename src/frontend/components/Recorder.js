@@ -246,6 +246,8 @@ class Recorder extends Component {
         <View style={styles.container}>
           <View style={styles.controls}>
             <PlayButton
+              circular
+              size={140}
               play={() => this._play()}
               stop={() => this._stopPlay()}
             />

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, TouchableHighlight } from 'react-native'
+import { StyleSheet, View, Image, TouchableHighlight } from 'react-native'
 import colors from '../lib/colors'
 
 export default function RecButton ({ startRecording, stopRecording, active }) {
@@ -16,7 +16,16 @@ export default function RecButton ({ startRecording, stopRecording, active }) {
         }
       }}
     >
-      <View style={boxStyle} />
+      <View style={boxStyle}>
+        <Image
+          source={
+            active
+              ? require('../assets/no_speak.png')
+              : require('../assets/speak.png')
+          }
+          style={styles.icon}
+        />
+      </View>
     </TouchableHighlight>
   )
 }
@@ -24,6 +33,13 @@ export default function RecButton ({ startRecording, stopRecording, active }) {
 var styles = StyleSheet.create({
   button: {
     padding: 20
+  },
+  icon: {
+    marginTop: 11,
+    marginLeft: 5,
+    height: 45,
+    width: 26,
+    alignSelf: 'center'
   },
   deactiveButton: {
     fontSize: 20,
@@ -34,9 +50,9 @@ var styles = StyleSheet.create({
   },
   activeButton: {
     fontSize: 20,
-    color: '#B81F00',
     height: 70,
     width: 70,
-    backgroundColor: colors.color2
+    backgroundColor: colors.color2,
+    borderRadius: 70
   }
 })

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, View, StyleSheet, TouchableHighlight } from 'react-native'
+import { Image, View, StyleSheet, TouchableHighlight } from 'react-native'
 import {
   useTrackPlayerEvents,
   TrackPlayerEvents,
@@ -60,7 +60,18 @@ export default ({ play, stop, size, circular, isPlaying }) => {
       onPress={() => (isPlaying ? stop() : play())}
     >
       <View style={circular ? styles.circular : { alignItems: 'center' }}>
-        <View style={isPlaying ? styles.activePlayButton : styles.playButton} />
+        <Image
+          style={{
+            width: 30,
+            height: 30
+          }}
+          source={
+            isPlaying
+              ? require('../assets/no_ear.png')
+              : require('../assets/ear.png')
+          }
+        />
+        {/* <View style={isPlaying ? styles.activePlayButton : styles.playButton} /> */}
       </View>
     </TouchableHighlight>
   )
