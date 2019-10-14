@@ -12,6 +12,7 @@ import TrackPlayer from 'react-native-track-player'
 // import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg'
 import RecButton from './RecButton'
 import PlayButton from './PlayButton'
+import Progress from './Progress'
 
 class Recorder extends Component {
   constructor (props) {
@@ -27,6 +28,8 @@ class Recorder extends Component {
       isPlaying: false,
       isFinished: false // not really used?
     }
+    this._play = this._play.bind(this)
+    this._stopPlay = this._stopPlay.bind(this)
   }
 
   async prepareRecordingPath (audioPath) {
@@ -67,6 +70,7 @@ class Recorder extends Component {
     // NOTE - this is super crude and I think crashes the app ):
     // needed because when a person clicks "cancel" this component can be unmounted while still recording
     this._stopRecording()
+    this._stopPlay()
   }
 
   // async _pause () {
@@ -129,10 +133,7 @@ class Recorder extends Component {
     TrackPlayer.setupPlayer().then(async () => {
       // Adds a track to the queue
       await TrackPlayer.add({
-        id: 'trackId',
-        url: this.state.audioPath,
-        title: 'Track Title',
-        artist: 'Track Artist'
+        url: this.state.audioPath
       })
 
       // Starts playing it
@@ -140,6 +141,14 @@ class Recorder extends Component {
       this.setState({
         isPlaying: true
       })
+      this.setState({ isPlaying: true })
+      const listener = TrackPlayer.addEventListener(
+        'playback-queue-ended',
+        () => {
+          listener.remove()
+          this.setState({ isPlaying: false })
+        }
+      )
     })
   }
 
@@ -229,7 +238,13 @@ class Recorder extends Component {
   }
 
   render () {
-    const { isPaused, isProcessing, isFinished, currentTime } = this.state
+    const {
+      isPaused,
+      isProcessing,
+      isFinished,
+      currentTime,
+      isPlaying
+    } = this.state
     const { isRecording } = this.props
     if (isProcessing) {
       return (
@@ -244,14 +259,15 @@ class Recorder extends Component {
     if (isFinished) {
       return (
         <View style={styles.container}>
-          <View style={styles.controls}>
+          <View style={styles.play}>
             <PlayButton
+              isPlaying={isPlaying}
               circular
               size={140}
               play={() => this._play()}
               stop={() => this._stopPlay()}
             />
-            <Text style={styles.progressText}>{formatTime(currentTime)}s</Text>
+            <Progress duration={formatTime(currentTime)} />
           </View>
         </View>
       )
@@ -293,6 +309,14 @@ var styles = StyleSheet.create({
   progressText: {
     paddingTop: 50,
     fontSize: 50
+  },
+  play: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+    width: '85%'
   }
 })
 

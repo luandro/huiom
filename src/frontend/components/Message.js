@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, TouchableHighlight, Image } from 'react-native'
 import TrackPlayer from 'react-native-track-player'
 import Avatar from './Avatar'
 import PlayButton from './PlayButton'
+import Progress from './Progress'
 import colors from '../lib/colors'
 
 export default class FeedItem extends Component {
@@ -12,44 +13,15 @@ export default class FeedItem extends Component {
       isPlaying: false
     }
     this._play = this._play.bind(this)
-  }
-  componentDidMount () {
-    // Adds an event handler for the playback-track-changed event
-    this.onTrackChange = TrackPlayer.addEventListener(
-      'playback-track-changed',
-      async data => {
-        let state = await TrackPlayer.getState()
-
-        let trackId = await TrackPlayer.getCurrentTrack()
-        let trackObject = await TrackPlayer.getTrack(trackId)
-
-        // Position, buffered position and duration return values in seconds
-        let position = await TrackPlayer.getPosition()
-        let buffered = await TrackPlayer.getBufferedPosition()
-        let duration = await TrackPlayer.getDuration()
-        this.setState({
-          // trackId,
-          // trackObject,
-          position,
-          // buffered,
-          duration
-        })
-      }
-    )
-  }
-  componentWillUnmount () {
-    // Removes the event handler
-    this.onTrackChange.remove()
+    this._stopPlay = this._stopPlay.bind(this)
   }
   async _play () {
     TrackPlayer.setupPlayer()
       .then(async () => {
         // Adds a track to the queue
         await TrackPlayer.add({
-          id: 'trackId',
           url: this.props.filePath,
-          title: 'Track Title',
-          artist: 'Track Artist'
+          title: this.props.author
         })
 
         // Starts playing it
@@ -67,7 +39,11 @@ export default class FeedItem extends Component {
   }
 
   async _stopPlay () {
+    this.setState({ isPlaying: false })
     TrackPlayer.stop()
+  }
+  componentWillUnmount () {
+    this._stopPlay
   }
 
   render () {
@@ -108,10 +84,13 @@ export default class FeedItem extends Component {
         alignItems: 'center',
         width: '85%'
       },
-      track: {
-        width: '62%',
-        flexDirection: 'column',
-        justifyContent: 'flex-end'
+      playContainer: {
+        width: '85%',
+        alignSelf: 'center',
+        paddingHorizontal: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
       },
       circle: {
         height: 50,
@@ -149,41 +128,57 @@ export default class FeedItem extends Component {
     const showLength = threadLength > 1
     return (
       <View style={styles.wrapper}>
-        <View style={styles.container}>
-          <TouchableHighlight
-            onPress={gotoProfile}
-            underlayColor={'transparent'}
-          >
-            <Avatar source={image} />
-          </TouchableHighlight>
-          <PlayButton
-            size={20}
-            circular
-            play={this._play}
-            stop={this._stopPlay}
-            isPlaying={isPlaying}
-          />
+        {!isPlaying && (
+          <View style={styles.container}>
+            <TouchableHighlight
+              onPress={gotoProfile}
+              underlayColor={'transparent'}
+            >
+              <Avatar source={image} />
+            </TouchableHighlight>
+            <PlayButton
+              size={20}
+              circular
+              play={this._play}
+              stop={this._stopPlay}
+              isPlaying={isPlaying}
+            />
 
-          <TouchableHighlight
-            onPress={gotoThread}
-            underlayColor={'transparent'}
-          >
-            <View style={styles.circle}>
-              <Image
-                source={require('../assets/speak.png')}
-                style={styles.speak}
-              />
-              {showLength && (
-                <View style={[styles.circle, styles.threadLength]}>
-                  <Text style={styles.threadLengthText}>{threadLength}</Text>
-                </View>
-              )}
-            </View>
-          </TouchableHighlight>
-        </View>
+            <TouchableHighlight
+              onPress={gotoThread}
+              underlayColor={'transparent'}
+            >
+              <View style={styles.circle}>
+                <Image
+                  source={require('../assets/speak.png')}
+                  style={styles.speak}
+                />
+                {showLength && (
+                  <View style={[styles.circle, styles.threadLength]}>
+                    <Text style={styles.threadLengthText}>{threadLength}</Text>
+                  </View>
+                )}
+              </View>
+            </TouchableHighlight>
+          </View>
+        )}
+        {isPlaying && (
+          <View style={styles.playContainer}>
+            <PlayButton
+              size={20}
+              circular
+              play={this._play}
+              stop={this._stopPlay}
+              isPlaying={isPlaying}
+            />
+            <Progress duration={duration} />
+          </View>
+        )}
         <View style={styles.info}>
           <Text style={{ alignSelf: 'flex-start' }}>{publishedAt}</Text>
-          <Text style={{ alignSelf: 'flex-end' }}>{duration}s</Text>
+          {!isPlaying && (
+            <Text style={{ alignSelf: 'flex-end' }}>{duration}s</Text>
+          )}
         </View>
       </View>
     )
