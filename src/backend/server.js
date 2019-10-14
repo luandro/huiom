@@ -33,7 +33,7 @@ const config = (() => {
       }
     },
     friends: {
-      hops: 1
+      hops: 2
     }
   })
 })()
