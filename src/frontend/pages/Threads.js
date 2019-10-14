@@ -4,6 +4,7 @@ import nodejs from 'nodejs-mobile-react-native'
 import ThreadItem from '../components/ThreadItem'
 import ActionButton from '../components/ActionButton'
 import { getFeed } from '../lib/utils'
+import colors from '../lib/colors'
 
 export default class Threads extends Component {
   constructor () {
@@ -62,7 +63,13 @@ export default class Threads extends Component {
     const { navigation } = this.props
     const { isLoading, feed } = this.state
     return (
-      <View style={{ flex: 1, width: '100%' }}>
+      <View
+        style={{
+          flex: 1,
+          width: '100%',
+          backgroundColor: colors.light
+        }}
+      >
         {feed && (
           <FlatList
             refreshing={isLoading}
@@ -87,7 +94,9 @@ export default class Threads extends Component {
           <Image
             source={require('../assets/elephant.gif')}
             style={{
-              alignSelf: 'center'
+              marginTop: '55%',
+              width: '100%',
+              height: 180
             }}
           />
         )}
