@@ -68,13 +68,16 @@ cd ./nodejs-assets/nodejs-project;
 $(npm bin)/noderify \
   --replace.node-extend=xtend \
   --replace.multiserver/plugins/net=staltz-multiserver/plugins/net \
+  --replace.mdmanifest=nop \
   --filter=rn-bridge \
+  --filter=bl \
+  --filter=braces \
+  --filter=bufferutil \
+  --filter=utf-8-validate \
   server.js > _server.js;
   # --replace.non-private-ip=non-private-ip-android \
   # --replace.bindings=bindings-noderify-nodejs-mobile \
   # --replace.utp-native=utp-native-no-prebuild \
-  # --filter=bufferutil \
-  # --filter=utf-8-validate \
 rm server.js;
 mv _server.js server.js;
 cd ../..;
