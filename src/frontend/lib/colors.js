@@ -1,5 +1,5 @@
 export default {
-  dark: '',
+  dark: '#000',
   light: '#fff',
   color1: '#F94E3F',
   color2: '#6F2108',

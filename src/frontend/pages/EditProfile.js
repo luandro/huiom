@@ -4,6 +4,7 @@ import {
   View,
   TextInput,
   Image,
+  Text,
   StyleSheet,
   TouchableHighlight
 } from 'react-native'
@@ -11,6 +12,7 @@ import nodejs from 'nodejs-mobile-react-native'
 import ImagePicker from 'react-native-image-picker'
 import { whoami, setProfile } from '../lib/utils'
 import Button from '../components/Button'
+import colors from '../lib/colors'
 
 const options = {
   title: 'Select image',
@@ -103,7 +105,12 @@ export default class Profile extends Component {
     // console.log('n', nextImage)
     return (
       <ScrollView contentInsetAdjustmentBehavior='automatic'>
-        <View style={{ padding: 50 }}>
+        <View style={styles.container}>
+          <Text style={styles.welcome}>Welcome</Text>
+          <Text style={styles.description}>
+            To continue please set a name and an image for this profile. This
+            will only be prompt once.
+          </Text>
           <TextInput
             value={isLoading ? 'loading...' : nextName}
             style={styles.textInput}
@@ -118,10 +125,11 @@ export default class Profile extends Component {
           ) : (
             <TouchableHighlight
               onPress={this.handleImage}
-              underlayColor={'transparent'}
+              underlayColor={colors.color3}
+              style={styles.imageContainer}
             >
               <Image
-                style={styles.image}
+                style={styles.icon}
                 source={require('../assets/add_image.png')}
               />
             </TouchableHighlight>
@@ -148,18 +156,51 @@ export default class Profile extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '75%',
+    alignSelf: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    paddingTop: '15%'
+  },
+  welcome: {
+    alignSelf: 'center',
+    fontSize: 30,
+    marginVertical: '10%'
+  },
+  description: {
+    textAlign: 'left'
+  },
   textInput: {
     paddingLeft: 15,
     borderRadius: 15,
     fontSize: 20,
     borderWidth: 1,
     borderBottomColor: '#000',
-    marginBottom: 10
+    marginBottom: 10,
+    marginVertical: '10%'
+  },
+  imageContainer: {
+    marginVertical: '10%',
+    alignSelf: 'center',
+    backgroundColor: colors.color3,
+    borderRadius: 50,
+    paddingVertical: 20,
+    paddingHorizontal: 20
+  },
+  icon: {
+    alignSelf: 'center',
+    height: 60,
+    width: 60
   },
   image: {
-    marginVertical: 30,
+    marginVertical: '10%',
     alignSelf: 'center',
-    height: 200,
-    width: 200
+    height: 150,
+    width: 150,
+    borderRadius: 75,
+    borderColor: colors.dark,
+    borderWidth: 1
   }
 })
