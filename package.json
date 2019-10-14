@@ -23,7 +23,6 @@
     "react-native-action-button": "^2.8.5",
     "react-native-android-wifi": "^0.0.41",
     "react-native-audio": "^4.3.0",
-    "react-native-ffmpeg": "^0.2.1",
     "react-native-gesture-handler": "^1.4.1",
     "react-native-image-picker": "^1.1.0",
     "react-native-pulse": "^1.0.7",

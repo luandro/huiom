@@ -7,7 +7,7 @@ const { isAudio } = require('ssb-audio-schema')
 const toUrl = require('ssb-serve-blobs/id-to-url')
 const { commit, getImage, getName, threadWithImage } = require('./utils')
 
-const getAccFile = filePath => filePath.split('.opus')[0] + '.aac'
+// const getAccFile = filePath => filePath.split('.opus')[0] + '.aac'
 
 module.exports = (sbot, appDataDir) => {
   sbot.conn.start() // is this needed?
@@ -32,7 +32,7 @@ module.exports = (sbot, appDataDir) => {
             const content = {
               type: 'audio',
               blob: hash, // the hash-id of the blob
-              format: 'opus',
+              format: 'acc',
               duration,
               size,
               root,
@@ -40,10 +40,10 @@ module.exports = (sbot, appDataDir) => {
             }
             sbot.publish(content, (err, value) => {
               fs.unlink(filePath, err => console.log('SSB: unlink', err))
-              fs.unlink(getAccFile(filePath), err => {
-                if (err) throw err
-                console.log('successfully deleted ', getAccFile(filePath))
-              })
+              // fs.unlink(getAccFile(filePath), err => {
+              //   if (err) throw err
+              //   console.log('successfully deleted ', getAccFile(filePath))
+              // })
 
               if (err) return console.error(err)
               console.log('Published', value)
@@ -59,9 +59,9 @@ module.exports = (sbot, appDataDir) => {
 
       case 'deleteAudioFile':
         fs.unlink(payload.filePath, err => console.log('SSB: unlink', err))
-        fs.unlink(getAccFile(payload.filePath), err =>
-          console.log('SSB: unlink', err)
-        )
+        // fs.unlink(getAccFile(payload.filePath), err =>
+        //   console.log('SSB: unlink', err)
+        // )
         break
 
       case 'getFeed':

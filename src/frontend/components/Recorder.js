@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { AudioRecorder, AudioUtils } from 'react-native-audio'
 import TrackPlayer from 'react-native-track-player'
-import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg'
+// import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg'
 import RecButton from './RecButton'
 import PlayButton from './PlayButton'
 
@@ -106,8 +106,8 @@ class Recorder extends Component {
     this.props.setRecording(false)
     this.setState({
       isPaused: false,
-      isStopped: true,
-      isProcessing: true
+      isStopped: true
+      // isProcessing: true
     })
 
     try {
@@ -175,40 +175,56 @@ class Recorder extends Component {
   }
 
   _finishRecording (didSucceed, filePath, size) {
-    const opusFile = filePath.split('.aac')[0] + '.opus'
+    // if (didSucceed && process.env.OPUS) {
+    // const opusFile = filePath.split('.aac')[0] + '.opus'
+    //   RNFFmpeg.executeWithArguments([
+    //     '-i',
+    //     filePath,
+    //     '-strict',
+    //     '-2',
+    //     '-c:v',
+    //     'opus',
+    //     opusFile
+    //   ])
+    //     .then(result => {
+    //       console.log('FFmpeg process exited with rc ' + result.rc)
+    //       this.setState({
+    //         isProcessing: false,
+    //         isFinished: didSucceed
+    //       })
+    //       this.props.setRecordedFile({
+    //         filePath: opusFile,
+    //         duration: formatTime(this.state.currentTime),
+    //         size
+    //       })
+    //       console.log(
+    //         `Finished recording of duration ${formatTime(
+    //           this.state.currentTime
+    //         )} seconds at path: ${filePath}`
+    //       )
+    //     })
+    //     .catch(err => {
+    //       this.setState({
+    //         isProcessing: false,
+    //         isFinished: true
+    //       })
+    //     })
+    // }
     if (didSucceed) {
-      RNFFmpeg.executeWithArguments([
-        '-i',
-        filePath,
-        '-strict',
-        '-2',
-        '-c:v',
-        'opus',
-        opusFile
-      ])
-        .then(result => {
-          console.log('FFmpeg process exited with rc ' + result.rc)
-          this.setState({
-            isProcessing: false,
-            isFinished: didSucceed
-          })
-          this.props.setRecordedFile({
-            filePath: opusFile,
-            duration: formatTime(this.state.currentTime),
-            size
-          })
-          console.log(
-            `Finished recording of duration ${formatTime(
-              this.state.currentTime
-            )} seconds at path: ${filePath}`
-          )
-        })
-        .catch(err => {
-          this.setState({
-            isProcessing: false,
-            isFinished: true
-          })
-        })
+      this.setState({
+        isProcessing: false,
+        isFinished: didSucceed
+      })
+      this.props.setRecordedFile({
+        filePath: filePath,
+        duration: formatTime(this.state.currentTime),
+        size
+      })
+      console.log(
+        `Finished recording of duration ${formatTime(
+          this.state.currentTime
+        )} seconds at path: ${filePath}`
+      )
     }
   }
 

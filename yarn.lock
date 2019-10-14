@@ -5678,11 +5678,6 @@ react-native-audio@^4.3.0:
   resolved "https://registry.yarnpkg.com/react-native-audio/-/react-native-audio-4.3.0.tgz#fae22b81f6a4dda706fd4837d0c6a89c66cf2e7e"
   integrity sha512-QQYq28eSJy+y/Ukvry0AkbwMVELAj+LcEwCVRH+7sKLqlnoBBxGd4ilhgJHjwOiC70192LueGbjXJjPPEwW3iA==
 
-react-native-ffmpeg@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-ffmpeg/-/react-native-ffmpeg-0.2.1.tgz#0ca50a5ea9c801d10e953f94c3f385732bc4f9c8"
-  integrity sha512-+2eQ4qAoWE9woc7rGCbyXjLA175fR8eRoC0J4qxjPkNXX8z/iy+HfcWimBqtS4eEeik5z0GOjBive9+nGApVVw==
-
 react-native-gesture-handler@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.4.1.tgz#c38d9e57637b95e221722a79f2bafac62e3aeb21"
