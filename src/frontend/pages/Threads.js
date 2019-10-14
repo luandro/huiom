@@ -75,6 +75,7 @@ export default class Threads extends Component {
             refreshing={isLoading}
             onRefresh={this.handleRefresh}
             data={feed}
+            ListFooterComponent={<View style={{ margin: 50 }} />}
             renderItem={({ item }) => {
               const branch = item.messages[0] ? item.messages[0].key : null
               return (
