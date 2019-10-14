@@ -89,7 +89,7 @@ export default class Connections extends Component {
               alert('Hotspot SSID: ' + config.ssid)
             },
             err => {
-              alert(err.toString())
+              console.log(err.toString())
             }
           )
         },
@@ -127,7 +127,7 @@ export default class Connections extends Component {
       >
         {wifiStatus && (
           <TouchableHighlight
-            onPress={this.handleWifi}
+            onPress={!hotspotStatus && this.handleWifi}
             underlayColor={'transparent'}
           >
             <View
