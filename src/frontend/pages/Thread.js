@@ -82,6 +82,7 @@ export default class Thread extends Component {
             refreshing={isLoading}
             onRefresh={this.handleRefresh}
             data={feed[0].messages}
+            ListFooterComponent={<View style={{ margin: 50 }} />}
             renderItem={({ item }) => {
               const branch = item.key
               const { author, content, timestamp } = item.value
