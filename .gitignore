@@ -1,6 +1,6 @@
 # Project specific
 nodejs-assets/
-
+.env
 # OSX
 #
 .DS_Store
