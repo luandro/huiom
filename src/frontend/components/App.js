@@ -50,6 +50,7 @@ class App extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    let timeOut
     if (
       prevState.profile !== this.state.profile &&
       (!this.state.profile.name || !this.state.profile.image)
@@ -63,9 +64,12 @@ class App extends Component {
     ) {
       this.setState({ replicating: true })
       getFeed()
-      setTimeout(() => {
+      timeOut = setTimeout(() => {
         this.setState({ replicating: false, replicatedAt: Date.now() })
+        clearTimeout(timeOut)
       }, 1000)
+    } else {
+      clearTimeout(timeOut)
     }
 
     // console.log('PROFILE', prevState.profile)
