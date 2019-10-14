@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { View, FlatList } from 'react-native'
+import { View, FlatList, Image } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
-import Message from '../components/Message'
 import ThreadItem from '../components/ThreadItem'
 import ActionButton from '../components/ActionButton'
 import { getFeed } from '../lib/utils'
@@ -82,6 +81,14 @@ export default class Threads extends Component {
             }}
             style={{ padding: 10 }}
             keyExtractor={(item, index) => index.toString()}
+          />
+        )}
+        {!feed && (
+          <Image
+            source={require('../assets/elephant.gif')}
+            style={{
+              alignSelf: 'center'
+            }}
           />
         )}
         <ActionButton action={() => navigation.navigate('Record')} />

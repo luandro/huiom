@@ -187,6 +187,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
     implementation project(':react-native-hotspot')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
