@@ -17,6 +17,11 @@ import Wifi from './Wifi'
 const MainStack = createStackNavigator()
 const RootStack = createStackNavigator()
 const navigationRef = React.createRef()
+const navigationRefRoot = React.createRef()
+
+function navigateRoot (name, params) {
+  navigationRefRoot.current && navigationRefRoot.current.navigate(name, params)
+}
 function navigate (name, params) {
   navigationRef.current && navigationRef.current.navigate(name, params)
 }
@@ -56,7 +61,7 @@ class App extends Component {
       (!this.state.profile.name || !this.state.profile.image)
     ) {
       // redirect to profile
-      navigate('ProfileModal')
+      navigateRoot('ProfileModal')
     }
     if (
       prevState.replication.progress !== this.state.replication.progress &&
@@ -162,12 +167,12 @@ class App extends Component {
 
 export default function RootStackScreen () {
   return (
-    <NavigationNativeContainer ref={navigationRef}>
+    <NavigationNativeContainer ref={navigationRefRoot}>
       <RootStack.Navigator mode='modal' headerMode='none'>
         <RootStack.Screen name='Main' component={App} />
         <RootStack.Screen
           name='ProfileModal'
-          component={props => <EditProfile navigate={navigate} />}
+          component={props => <EditProfile navigate={navigateRoot} />}
         />
       </RootStack.Navigator>
     </NavigationNativeContainer>

@@ -135,7 +135,7 @@ class Threads extends Component {
             keyExtractor={(item, index) => index.toString()}
           />
         )}
-        {!feed && (
+        {(!feed || (feed.length === 0 && firstLoad)) && (
           <Image
             source={require('../assets/elephant.gif')}
             style={{
