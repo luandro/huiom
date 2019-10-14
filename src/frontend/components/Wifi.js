@@ -162,7 +162,7 @@ export default class Connections extends Component {
               width: 35,
               borderRadius: 35,
               paddingTop: 7,
-              backgroundColor: hotspotStatus ? colors.color1 : colors.color2
+              backgroundColor: hotspotStatus ? colors.color1 : 'grey'
             }}
           >
             <Image

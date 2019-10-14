@@ -67,7 +67,7 @@ export default class Threads extends Component {
         style={{
           flex: 1,
           width: '100%',
-          backgroundColor: colors.light
+          backgroundColor: feed ? '#ddd' : colors.light
         }}
       >
         {feed && (
