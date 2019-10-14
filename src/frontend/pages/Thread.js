@@ -41,7 +41,6 @@ export default class Thread extends Component {
   }
   componentWillUnmount () {
     this.listener.remove() // solves setState on unmounted components!
-    getFeed()
   }
   handleRefresh = () => {
     const {

@@ -56,7 +56,7 @@ export default ({ messages, navigate, root, branch }) => {
             }}
           >
             {userList.map(i => (
-              <Avatar key={i.key} source={i.value.content.image} />
+              <Avatar key={i.key} size={25} source={i.value.content.image} />
             ))}
           </View>
         </TouchableHighlight>

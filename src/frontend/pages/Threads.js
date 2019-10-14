@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
-import { View, FlatList, Image } from 'react-native'
+import { View, FlatList, Image, ActivityIndicator } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import ThreadItem from '../components/ThreadItem'
 import ActionButton from '../components/ActionButton'
 import { getFeed } from '../lib/utils'
 import colors from '../lib/colors'
 
-export default class Threads extends Component {
+class Threads extends Component {
   constructor () {
     super()
     this.state = {
       feed: null,
+      firstLoad: false,
       isLoading: false,
       feedUpdatedAt: null,
       replicatedAt: null,
@@ -18,17 +20,23 @@ export default class Threads extends Component {
     }
     this.reducer.bind(this)
   }
-  componentDidMount () {
+  async componentDidMount () {
+    const cacheFeed = await this._retrieveData('feed')
+    this.setState({
+      firstLoad: true,
+      feed: cacheFeed
+    })
     getFeed()
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  async componentDidUpdate (prevProps, prevState) {
+    // Get fresh if replicating
+    const { firstLoad, isLoading, replicatedAt, feedUpdatedAt } = this.state
     if (
-      prevState.replicatedAt !== this.state.replicatedAt ||
-      prevState.feedUpdatedAt !== this.state.feedUpdatedAt
+      prevState.replicatedAt !== replicatedAt ||
+      (prevState.feedUpdatedAt !== feedUpdatedAt && !firstLoad && isLoading)
     ) {
-      console.log('Lets update feed')
       // Dirty hack to update
       getFeed()
     }
@@ -37,13 +45,18 @@ export default class Threads extends Component {
     this.listener.remove() // solves setState on unmounted components!
   }
   handleRefresh = () => {
-    this.setState({ isLoading: true }, () => getFeed())
+    const { isLoading, firstLoad } = this.state
+    if (!isLoading && !firstLoad) {
+      this.setState({ isLoading: true }, () => getFeed())
+    }
   }
   reducer ({ type, payload }) {
     switch (type) {
       case 'feed':
+        this._storeData('feed', payload)
         this.setState({
           isLoading: false,
+          firstLoad: false,
           feed: payload
         })
         break
@@ -59,9 +72,30 @@ export default class Threads extends Component {
       default:
     }
   }
+  _storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value))
+    } catch (error) {
+      console.log('Error saving data', error)
+    }
+  }
+  _retrieveData = async key => {
+    try {
+      const value = await AsyncStorage.getItem(key)
+      if (value !== null) {
+        // We have data!!
+        const parsed = JSON.parse(value)
+        return parsed
+      } else return null
+    } catch (error) {
+      // Error retrieving data
+    }
+  }
   render () {
     const { navigation } = this.props
-    const { isLoading, feed } = this.state
+    // const isFocused = navigation.isFocused()
+    // console.log('isFocused', isFocused)
+    const { isLoading, firstLoad, feed } = this.state
     return (
       <View
         style={{
@@ -70,6 +104,16 @@ export default class Threads extends Component {
           backgroundColor: feed ? '#ddd' : colors.light
         }}
       >
+        {feed && firstLoad && (
+          <ActivityIndicator
+            style={{
+              position: 'absolute',
+              top: 30,
+              left: 15,
+              zIndex: 99
+            }}
+          />
+        )}
         {feed && (
           <FlatList
             refreshing={isLoading}
@@ -106,3 +150,5 @@ export default class Threads extends Component {
     )
   }
 }
+
+export default Threads
