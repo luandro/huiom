@@ -63,49 +63,53 @@ export default class Connections extends Component {
         }}
       >
         {connectedPeers &&
-          connectedPeers.map((peer, key) => {
-            return (
-              <TouchableHighlight
-                key={peer[1].key}
-                underlayColor={'transparent'}
-                onPress={() => gotoProfile(peer[1].key)}
-              >
-                <View style={{ marginHorizontal: 5 }}>
-                  {peer[1].key === replicatingPeer && (
-                    <Pulse
-                      color='green'
-                      numPulses={2}
-                      diameter={80}
-                      speed={10}
-                      duration={3000}
-                    />
-                  )}
-                  {peer[1].type === 'lan' && <Avatar source={peer[1].image} />}
-                  {peer[1].type === 'pub' && (
-                    <View
-                      style={{
-                        backgroundColor: colors.color1,
-                        height: 50,
-                        width: 50,
-                        borderRadius: 50
-                      }}
-                    >
-                      <Text
+          connectedPeers
+            .filter((p, k) => k < 5)
+            .map(peer => {
+              return (
+                <TouchableHighlight
+                  key={peer[1].key}
+                  underlayColor={'transparent'}
+                  onPress={() => gotoProfile(peer[1].key)}
+                >
+                  <View style={{ marginHorizontal: 5 }}>
+                    {peer[1].key === replicatingPeer && (
+                      <Pulse
+                        color='green'
+                        numPulses={2}
+                        diameter={50}
+                        speed={10}
+                        duration={3000}
+                      />
+                    )}
+                    {peer[1].type === 'lan' && (
+                      <Avatar source={peer[1].image} size={35} />
+                    )}
+                    {peer[1].type === 'pub' && (
+                      <View
                         style={{
-                          textTransform: 'uppercase',
-                          alignSelf: 'center',
-                          paddingTop: 13,
-                          color: colors.light
+                          backgroundColor: colors.color1,
+                          height: 50,
+                          width: 50,
+                          borderRadius: 50
                         }}
                       >
-                        pub
-                      </Text>
-                    </View>
-                  )}
-                </View>
-              </TouchableHighlight>
-            )
-          })}
+                        <Text
+                          style={{
+                            textTransform: 'uppercase',
+                            alignSelf: 'center',
+                            paddingTop: 13,
+                            color: colors.light
+                          }}
+                        >
+                          pub
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                </TouchableHighlight>
+              )
+            })}
       </View>
     )
   }
