@@ -8,7 +8,7 @@
     "clean-bundler": "watchman watch-del-all && rm -rf $TMPDIR/react-*",
     "clean-android": "adb uninstall com.huiom && cd android && ./gradlew clean",
     "full-clean": "npm run clean-android && npm run clean-bundler && rm -rf node_modules",
-    "release": "npm run build && cd android && ./gradlew assembleRelease && cd ..",
+    "release": "rm -rf src/backend/node_modules && npm run build && cd android && ./gradlew assembleRelease && cd ..",
     "test": "jest",
     "lint": "eslint ."
   },
