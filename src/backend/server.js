@@ -20,6 +20,8 @@ const ssbPath = path.resolve(appDataDir, '.ssb')
 if (!fs.existsSync(ssbPath)) mkdirp.sync(ssbPath)
 const keys = ssbKeys.loadOrCreateSync(path.join(ssbPath, '/secret'))
 
+const capsHash = 'S4nNh0ZvAvjbY1ziZEHMXawbCEIM6qwjCDmf0ResT/s='
+
 const config = (() => {
   const NET_PORT = 26831
   const appName = 'ssb'
@@ -39,7 +41,8 @@ const config = (() => {
     },
     friends: {
       hops: 2
-    }
+    },
+    caps: { shs: Buffer.from(capsHash, 'base64') }
   })
 })()
 
@@ -60,7 +63,6 @@ const config = (() => {
 //   })
 // }
 
-const capsHash = 'm01Nh0ZvAvjbY1ziZEHMXawbCEIM6qwjCDmf0ResT/s='
 const ssConfig = { caps: { shs: Buffer.from(capsHash, 'base64') } }
 
 const sbot = require('secret-stack')(ssConfig) // eslint-disable-line
