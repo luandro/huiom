@@ -7,6 +7,7 @@
   "license": "",
   "dependencies": {
     "chloride": "^2.2.14",
+    "mkdirp": "^0.5.1",
     "multiserver-address": "^1.0.1",
     "promisify-tuple": "^1.0.0",
     "pull-file": "^1.1.0",
