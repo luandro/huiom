@@ -55,7 +55,8 @@ const config = (() => {
 //   })
 // }
 
-const ssConfig = { caps: { shs: Buffer.from(caps.shs, 'base64') } }
+const capsHash = 'm01Nh0ZvAvjbY1ziZEHMXawbCEIM6qwjCDmf0ResT/s='
+const ssConfig = { caps: { shs: Buffer.from(capsHash, 'base64') } }
 
 const sbot = require('secret-stack')(ssConfig) // eslint-disable-line
   .use(require('ssb-db'))
