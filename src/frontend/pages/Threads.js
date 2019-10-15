@@ -96,15 +96,17 @@ class Threads extends Component {
     // const isFocused = navigation.isFocused()
     // console.log('isFocused', isFocused)
     const { isLoading, firstLoad, feed } = this.state
+    const animation = !feed || (feed.length === 0 && firstLoad)
+    console.log('SATTE', this.state)
     return (
       <View
         style={{
           flex: 1,
           width: '100%',
-          backgroundColor: feed ? '#ddd' : colors.light
+          backgroundColor: animation ? colors.light : '#ddd'
         }}
       >
-        {feed && firstLoad && (
+        {!animation && firstLoad && (
           <ActivityIndicator
             style={{
               position: 'absolute',
@@ -135,11 +137,11 @@ class Threads extends Component {
             keyExtractor={(item, index) => index.toString()}
           />
         )}
-        {(!feed || (feed.length === 0 && firstLoad)) && (
+        {animation && (
           <Image
             source={require('../assets/elephant.gif')}
             style={{
-              marginTop: '55%',
+              marginVertical: '45%',
               width: '100%',
               height: 180
             }}
