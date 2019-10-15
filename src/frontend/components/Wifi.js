@@ -21,10 +21,14 @@ export default class Connections extends Component {
     super()
     this.state = {
       wifiStatus: null,
-      hotspotStatus: null
+      hotspotStatus: null,
+      isConnected: false
     }
     this.handleWifi = this.handleWifi.bind(this)
     this.handleHotspot = this.handleHotspot.bind(this)
+    this.enableHotspot = this.enableHotspot.bind(this)
+    this.disableHotspot = this.disableHotspot.bind(this)
+    this.checkConnection = this.checkConnection.bind(this)
   }
   async componentDidMount () {
     // check hotspot status
@@ -49,9 +53,37 @@ export default class Connections extends Component {
     wifi.isEnabled(isEnabled => {
       if (isEnabled) {
         this.setState({
-          wifiStatus: 'enabled'
+          wifiStatus: 'enabled',
+          hotspotStatus: 'disabled'
         })
       } else {
+        Hotspot.enable(
+          () => {
+            console.log('Hotspot Enabled')
+            Hotspot.disable(
+              () => {
+                console.log('Hotspot Disabled')
+              },
+              err => {
+                if (err.toString() === 'Hotspot already closed') {
+                  this.setState({
+                    hotspotStatus: null
+                  })
+                }
+                console.log(err.toString())
+              }
+            )
+          },
+          err => {
+            console.log(err.toString())
+            if (err.toString() === 'Hotspot already running') {
+              this.setState({
+                wifiStatus: 'disabled',
+                hotspotStatus: 'enabled'
+              })
+            }
+          }
+        )
         this.setState({
           wifiStatus: 'disabled'
         })
@@ -59,75 +91,137 @@ export default class Connections extends Component {
     })
   }
 
+  componentDidUpdate (prevProps, prevState) {
+    const { wifiStatus, isConnected } = this.state
+    if (!isConnected && prevState.wifiStatus !== wifiStatus) {
+      this.checkConnection()
+    }
+  }
+
+  checkConnection () {
+    const { wifiStatus, hotspotStatus } = this.state
+    if (
+      wifiStatus === 'enabled' &&
+      (hotspotStatus === 'disabled' || !hotspotStatus)
+    ) {
+      let checkConnection = setTimeout(() => {
+        wifi.connectionStatus(isConnected => {
+          if (isConnected) {
+            this.setState({
+              isConnected: true
+            })
+          } else {
+            this.checkConnection()
+          }
+        })
+      }, 2000)
+    }
+  }
+
+  componentWillUnmount () {
+    clearTimeout(this.checkConnection)
+  }
+
   handleWifi () {
-    const { wifiStatus } = this.state
-    if (wifiStatus === 'disabled') {
-      wifi.setEnabled(true)
-      this.setState({
-        wifiStatus: 'enabled'
-      })
-    } else if (wifiStatus === 'enabled') {
-      wifi.setEnabled(false)
-      this.setState({
-        wifiStatus: 'disabled'
+    const { hotspotStatus } = this.state
+    if (!hotspotStatus || hotspotStatus === 'disabled') {
+      wifi.isEnabled(isEnabled => {
+        if (isEnabled) {
+          wifi.setEnabled(false)
+          this.setState({
+            wifiStatus: 'disabled',
+            isConnected: false
+          })
+        } else {
+          wifi.setEnabled(true)
+          this.setState({
+            wifiStatus: 'enabled'
+          })
+        }
       })
     }
+  }
+
+  enableHotspot () {
+    Hotspot.enable(
+      () => {
+        // console.log('Hotspot Enabled')
+        this.setState({
+          hotspotStatus: 'enabled',
+          wifiStatus: 'disabled',
+          isConnected: false
+        })
+        // Hotspot.getConfig(
+        //   config => {
+        //     alert('Hotspot SSID: ' + config.ssid)
+        //   },
+        //   err => {
+        //     console.log(err.toString())
+        //   }
+        // )
+      },
+      err => {
+        // this.setState({
+        //   hotspotError: true
+        // })
+        console.log(err.toString())
+        this.setState({
+          hotspotStatus: 'enabled'
+        })
+      }
+    )
+  }
+
+  disableHotspot () {
+    Hotspot.disable(
+      () => {
+        // console.log('Hotspot Disabled')
+        Hotspot.disable(
+          () => {
+            console.log('Hotspot Disabled twice')
+            this.setState({
+              hotspotStatus: this.state.hotspotStatus ? 'uncontrolledOn' : null,
+              isConnected: false
+            })
+          },
+          err => {
+            console.log(err.toString())
+            this.setState({ hotspotStatus: 'disabled', isConnected: false })
+          }
+        )
+      },
+      err => {
+        console.log(err.toString())
+      }
+    )
   }
 
   handleHotspot () {
     const { hotspotStatus } = this.state
-    if (!hotspotStatus) {
-      Hotspot.enable(
-        () => {
-          console.log('Hotspot Enabled')
-          this.setState({
-            hotspotStatus: true,
-            wifiStatus: 'disabled'
-          })
-          Hotspot.getConfig(
-            config => {
-              alert('Hotspot SSID: ' + config.ssid)
-            },
-            err => {
-              console.log(err.toString())
-            }
-          )
-        },
-        err => {
-          // alert(err.toString())
-          Hotspot.disable(
-            () => {
-              console.log('Hotspot Disabled')
-              this.setState({ hotspotStatus: false })
-            },
-            err => {
-              alert(err.toString())
-            }
-          )
-        }
-      )
-    } else {
-      Hotspot.disable(
-        () => {
-          console.log('Hotspot Disabled')
-          this.setState({ hotspotStatus: false })
-        },
-        err => {
-          alert(err.toString())
-        }
-      )
-    }
+    if (hotspotStatus === 'uncontrolledOn') {
+    } else if (hotspotStatus === 'enabled') {
+      this.disableHotspot()
+    } else if (hotspotStatus === 'disabled') this.enableHotspot()
   }
 
   render () {
-    const { wifiStatus, hotspotStatus } = this.state
+    const { wifiStatus, isConnected, hotspotStatus } = this.state
     return (
       <View
-        style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 15 }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingVertical: 2,
+          paddingHorizontal: 10,
+          marginRight: 15,
+          borderColor: colors.dark,
+          borderWidth: 1,
+          borderRadius: 5
+        }}
       >
         {wifiStatus && (
           <TouchableHighlight
-            onPress={!hotspotStatus && this.handleWifi}
+            onPress={this.handleWifi}
             underlayColor={'transparent'}
           >
             <View
@@ -136,8 +230,11 @@ export default class Connections extends Component {
                 width: 35,
                 borderRadius: 35,
                 paddingTop: 7,
-                backgroundColor:
-                  wifiStatus === 'enabled' ? colors.color1 : colors.color2
+                backgroundColor: isConnected
+                  ? colors.color1
+                  : wifiStatus === 'enabled'
+                    ? colors.color2
+                    : colors.grey
               }}
             >
               <Image
@@ -154,6 +251,12 @@ export default class Connections extends Component {
         <TouchableHighlight
           onPress={this.handleHotspot}
           underlayColor={'transparent'}
+          style={{
+            borderLeftColor: colors.dark,
+            borderLeftWidth: wifiStatus ? 1 : 0,
+            paddingLeft: 0,
+            marginLeft: 10
+          }}
         >
           <View
             style={{
@@ -162,7 +265,13 @@ export default class Connections extends Component {
               width: 35,
               borderRadius: 35,
               paddingTop: 7,
-              backgroundColor: hotspotStatus ? colors.color1 : 'grey'
+              backgroundColor:
+                hotspotStatus === 'enabled' ||
+                hotspotStatus === 'uncontrolledOn'
+                  ? colors.color1
+                  : hotspotStatus === 'disabled'
+                    ? colors.grey
+                    : colors.light
             }}
           >
             <Image
