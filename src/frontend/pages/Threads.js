@@ -97,7 +97,6 @@ class Threads extends Component {
     // console.log('isFocused', isFocused)
     const { isLoading, firstLoad, feed } = this.state
     const animation = !feed || (feed.length === 0 && firstLoad)
-    console.log('SATTE', this.state)
     return (
       <View
         style={{
