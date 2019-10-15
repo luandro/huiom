@@ -61,33 +61,44 @@ export default ({ messages, navigate, root, branch }) => {
           </View>
         </TouchableHighlight>
         {messages.length > 2 && (
-          <View>
-            <View
-              style={{
-                backgroundColor: colors.light,
-                width: '100%',
-                height: 18
-              }}
-            />
-            <Text
-              style={{
-                position: 'absolute',
-                fontSize: 15,
-                backgroundColor: colors.color3,
-                color: colors.light,
-                height: 30,
-                width: 30,
-                borderRadius: 15,
-                zIndex: 99,
-                textAlign: 'center',
-                textAlignVertical: 'center',
-                right: '45%',
-                top: -6
-              }}
-            >
-              +{messages.length - 2}
-            </Text>
-          </View>
+          <TouchableHighlight
+            underlayColor={'transparent'}
+            style={{ zIndex: 99 }}
+            onPress={() =>
+              navigate('Thread', {
+                root,
+                branch
+              })
+            }
+          >
+            <View>
+              <View
+                style={{
+                  backgroundColor: colors.light,
+                  width: '100%',
+                  height: 18
+                }}
+              />
+              <Text
+                style={{
+                  position: 'absolute',
+                  fontSize: 15,
+                  backgroundColor: colors.color3,
+                  color: colors.light,
+                  height: 30,
+                  width: 30,
+                  borderRadius: 15,
+                  zIndex: 99,
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  right: '45%',
+                  top: -6
+                }}
+              >
+                +{messages.length - 2}
+              </Text>
+            </View>
+          </TouchableHighlight>
         )}
         {messages.length > 1 && (
           <Message
