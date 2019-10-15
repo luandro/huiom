@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import Recorder from '../components/Recorder'
 import Button from '../components/Button'
-import { publishAudio, deleteAudio } from '../lib/utils'
+import { publishAudio, deleteAudio, getFeed } from '../lib/utils'
 
 export default class Recording extends Component {
   state = {
@@ -75,8 +75,10 @@ export default class Recording extends Component {
               onPress={() => {
                 if (params) {
                   publishAudio({ ...fileData, ...params })
+                  getFeed(params.root)
                 } else {
                   publishAudio(fileData)
+                  getFeed()
                 }
                 navigation.goBack()
               }}
