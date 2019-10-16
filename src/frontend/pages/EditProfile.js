@@ -6,10 +6,13 @@ import {
   Image,
   Text,
   StyleSheet,
-  TouchableHighlight
+  TouchableHighlight,
+  PermissionsAndroid
 } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
 import ImagePicker from 'react-native-image-picker'
+import DocumentPicker from 'react-native-document-picker'
+import RNFS from 'react-native-fs'
 import { whoami, setProfile } from '../lib/utils'
 import Button from '../components/Button'
 import colors from '../lib/colors'
@@ -39,11 +42,29 @@ export default class Profile extends Component {
     this.reducer.bind(this)
     this.save = this.save.bind(this)
     this.handleImage = this.handleImage.bind(this)
+    this.handleDocument = this.handleDocument.bind(this)
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
     whoami()
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'External storage',
+          message:
+            'We need your permission in order to find use your external storage'
+        }
+      )
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Thank you for your permission! :)')
+      } else {
+        console.log('You will not able to use external storage')
+      }
+    } catch (err) {
+      console.warn(err)
+    }
   }
 
   componentWillUnmount () {
@@ -59,17 +80,59 @@ export default class Profile extends Component {
       console.log('Response = ', response)
 
       if (response.didCancel) {
-        console.log('User cancelled image picker')
+        alert('User cancelled image picker')
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error)
+        alert('ImagePicker Error: ', response.error)
       } else {
         // const source = { uri: 'data:image/jpeg;base64,' + response.data }
+
         this.setState({
           nextImage: 'data:image/jpeg;base64,' + response.data,
           nextImagePath: response.path
         })
       }
     })
+  }
+  async handleDocument () {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images]
+      })
+      if (res.type.split('/')[0] === 'image') {
+        const folder = res.uri
+          .split('/')
+          .filter((p, key) => key < res.uri.split('/').length - 1)
+          .join('/')
+        RNFS.readFile(res.uri, 'base64')
+          .then(base64Image => {
+            const newFilePath = RNFS.DocumentDirectoryPath + '/' + res.name
+            RNFS.appendFile(newFilePath, base64Image, 'base64')
+              .then(() => {
+                this.setState({
+                  nextImage: res.uri,
+                  nextImagePath: newFilePath
+                })
+              })
+              .catch(err => console.log('ERROR', err))
+          })
+          .catch(err => console.log('ERRRR', err))
+      }
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else {
+        throw err
+      }
+    }
+  }
+
+  save () {
+    this.setState({ isSaving: true })
+    setProfile({
+      name: this.state.nextName,
+      image: this.state.nextImagePath
+    })
+    this.props.navigate('Main')
   }
 
   reducer ({ type, payload }) {
@@ -117,24 +180,34 @@ export default class Profile extends Component {
             placeholder='set your name'
             onChangeText={text => this.setState({ nextName: text })}
           />
-          {currentImage !== '' || nextImage ? (
-            <Image
-              style={styles.image}
-              source={{ uri: nextImage || currentImage }}
-            />
-          ) : (
+          <View style={styles.pickerContainer}>
             <TouchableHighlight
-              onPress={this.handleImage}
-              underlayColor={colors.color3}
               style={styles.imageContainer}
+              onPress={this.handleDocument}
             >
               <Image
-                style={styles.icon}
-                source={require('../assets/add_image.png')}
+                style={styles.folderIcon}
+                source={require('../assets/folder.png')}
               />
             </TouchableHighlight>
-          )}
-
+            {currentImage !== '' || nextImage ? (
+              <Image
+                style={styles.image}
+                source={{ uri: nextImage || currentImage }}
+              />
+            ) : (
+              <TouchableHighlight
+                onPress={this.handleImage}
+                underlayColor={colors.color3}
+                style={styles.imageContainer}
+              >
+                <Image
+                  style={styles.icon}
+                  source={require('../assets/add_image.png')}
+                />
+              </TouchableHighlight>
+            )}
+          </View>
           <Button
             icon={require('../assets/check.png')}
             disabled={isSaving || !canPublish}
@@ -143,15 +216,6 @@ export default class Profile extends Component {
         </View>
       </ScrollView>
     )
-  }
-
-  save () {
-    this.setState({ isSaving: true })
-    setProfile({
-      name: this.state.nextName,
-      image: this.state.nextImagePath
-    })
-    this.props.navigate('Main')
   }
 }
 
@@ -181,18 +245,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginVertical: '10%'
   },
-  imageContainer: {
+  pickerContainer: {
     marginVertical: '10%',
-    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  imageContainer: {
+    justifyContent: 'center',
     backgroundColor: colors.color3,
     borderRadius: 50,
-    paddingVertical: 20,
-    paddingHorizontal: 20
+    height: 100,
+    width: 100
+    // paddingVertical: 20,
+    // paddingHorizontal: 20
   },
   icon: {
     alignSelf: 'center',
     height: 60,
     width: 60
+  },
+  folderIcon: {
+    alignSelf: 'center',
+    height: 39,
+    width: 50
   },
   image: {
     marginVertical: '10%',
