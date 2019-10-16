@@ -34,8 +34,7 @@
     "react-native-safe-area-view": "^1.0.0",
     "react-native-screens": "^2.0.0-alpha.4",
     "react-native-splash-screen": "^3.2.0",
-    "react-native-track-player": "git://github.com/react-native-kit/react-native-track-player.git#97692c6894c5ffaae9ad5772c4db0e24c420ac0d",
-    "react-native-wifi-hotspot": "^1.0.0"
+    "react-native-track-player": "git://github.com/react-native-kit/react-native-track-player.git#97692c6894c5ffaae9ad5772c4db0e24c420ac0d"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
