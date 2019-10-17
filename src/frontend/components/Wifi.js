@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
   View,
+  Text,
   TouchableHighlight,
   PermissionsAndroid,
   StyleSheet,
@@ -137,6 +138,24 @@ export default class Connections extends Component {
             </View>
           </TouchableHighlight>
         )}
+        <TouchableHighlight
+          onPress={this.props.editProfile}
+          underlayColor={'transparent'}
+        >
+          <View
+            style={{
+              height: 35,
+              width: 35,
+              borderRadius: 35,
+              paddingTop: 7,
+              marginLeft: 10,
+              backgroundColor: colors.color1,
+              alignItems: 'center'
+            }}
+          >
+            <Text style={{ color: colors.light }}>P</Text>
+          </View>
+        </TouchableHighlight>
       </View>
     )
   }

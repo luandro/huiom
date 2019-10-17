@@ -163,9 +163,8 @@ export default class Profile extends Component {
       currentImage,
       nextImage
     } = this.state
-    const canPublish = !isLoading && nextName.length && nextImage
-    // console.log('c', currentImage)
-    // console.log('n', nextImage)
+    // const canPublish = !isLoading && nextName.length && nextImage
+    // const canPublish = (!isLoading && nextName.length) || nextImage
     return (
       <ScrollView contentInsetAdjustmentBehavior='automatic'>
         <View style={styles.container}>
@@ -210,7 +209,7 @@ export default class Profile extends Component {
           </View>
           <Button
             icon={require('../assets/check.png')}
-            disabled={isSaving || !canPublish}
+            disabled={isSaving}
             onPress={this.save}
           />
         </View>
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    paddingTop: '15%'
+    paddingTop: '2.5%'
   },
   welcome: {
     alignSelf: 'center',

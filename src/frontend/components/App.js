@@ -56,13 +56,13 @@ class App extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     let timeOut
-    if (
-      prevState.profile !== this.state.profile &&
-      (!this.state.profile.name || !this.state.profile.image)
-    ) {
-      // redirect to profile
-      navigateRoot('ProfileModal')
-    }
+    // if (
+    //   prevState.profile !== this.state.profile &&
+    //   (!this.state.profile.name || !this.state.profile.image)
+    // ) {
+    //   // redirect to profile
+    //   navigateRoot('ProfileModal')
+    // }
     if (
       prevState.replication.progress !== this.state.replication.progress &&
       !this.state.replicating
@@ -134,7 +134,9 @@ class App extends Component {
                     gotoProfile={id => navigate('Profile', { id })}
                   />
                 ),
-                headerRight: () => <Wifi />
+                headerRight: () => (
+                  <Wifi editProfile={() => navigateRoot('ProfileModal')} />
+                )
               }}
             />
             <MainStack.Screen
