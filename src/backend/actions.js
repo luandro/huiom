@@ -75,7 +75,7 @@ module.exports = (sbot, appDataDir) => {
             console.log('SSB: unlink', err)
             return commit({
               type: 'exception',
-              payload: 'fs.unlink ' + content + '\n' + fsErr
+              payload: 'fs.unlink ' + payload + '\n' + err
             })
           }
         })
