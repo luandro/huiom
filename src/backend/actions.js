@@ -38,15 +38,27 @@ module.exports = (sbot, appDataDir) => {
               root,
               branch
             }
-            sbot.publish(content, (err, value) => {
-              fs.unlink(filePath, err => console.log('SSB: unlink', err))
+            sbot.publish(content, (sbotErr, value) => {
+              if (sbotErr) {
+                return commit({
+                  type: 'exception',
+                  payload: 'sbot.publish ' + content + '\n' + sbotErr
+                })
+              }
+              console.log('Published', value)
+              fs.unlink(filePath, fsErr => {
+                if (fsErr) {
+                  console.log('SSB: unlink', fsErr)
+                  commit({
+                    type: 'exception',
+                    payload: 'fs.unlink ' + content + '\n' + fsErr
+                  })
+                }
+              })
               // fs.unlink(getAccFile(filePath), err => {
               //   if (err) throw err
               //   console.log('successfully deleted ', getAccFile(filePath))
               // })
-
-              if (err) return console.error(err)
-              console.log('Published', value)
 
               commit({
                 type: 'newAudioFile',
@@ -58,7 +70,15 @@ module.exports = (sbot, appDataDir) => {
         break
 
       case 'deleteAudioFile':
-        fs.unlink(payload.filePath, err => console.log('SSB: unlink', err))
+        fs.unlink(payload.filePath, err => {
+          if (err) {
+            console.log('SSB: unlink', err)
+            return commit({
+              type: 'exception',
+              payload: 'fs.unlink ' + content + '\n' + fsErr
+            })
+          }
+        })
         // fs.unlink(getAccFile(payload.filePath), err =>
         //   console.log('SSB: unlink', err)
         // )
@@ -73,7 +93,13 @@ module.exports = (sbot, appDataDir) => {
             }),
             pull.asyncMap(threadWithImage(sbot)),
             pull.collect((err, data) => {
-              if (err) return console.error(err)
+              if (err) {
+                console.error(err)
+                return commit({
+                  type: 'exception',
+                  payload: 'getFeed ' + err
+                })
+              }
               console.log('DATA =====>', data)
               commit({ type: 'feed', payload: data })
             })
@@ -87,7 +113,13 @@ module.exports = (sbot, appDataDir) => {
             }),
             pull.asyncMap(threadWithImage(sbot)),
             pull.collect((err, data) => {
-              if (err) return console.error(err)
+              if (err) {
+                console.error(err)
+                return commit({
+                  type: 'exception',
+                  payload: 'getFeed ' + err
+                })
+              }
               console.log('DATA =====>', data)
               commit({ type: 'feed', payload: data })
             })

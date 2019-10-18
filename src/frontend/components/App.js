@@ -46,7 +46,7 @@ class App extends Component {
   async componentDidMount () {
     SplashScreen.hide()
     nodejs.start('loader.js')
-    whoami()
+    // whoami()
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
   }
 
@@ -56,6 +56,9 @@ class App extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     let timeOut
+    /*
+      Show profile is profile empty
+    */
     // if (
     //   prevState.profile !== this.state.profile &&
     //   (!this.state.profile.name || !this.state.profile.image)
@@ -63,6 +66,9 @@ class App extends Component {
     //   // redirect to profile
     //   navigateRoot('ProfileModal')
     // }
+    /*
+      Peer Replication
+    */
     if (
       prevState.replication.progress !== this.state.replication.progress &&
       !this.state.replicating
@@ -76,19 +82,23 @@ class App extends Component {
     } else {
       clearTimeout(timeOut)
     }
-
-    // console.log('PROFILE', prevState.profile)
   }
 
   reducer ({ type, payload }) {
     switch (type) {
-      case 'whoami':
-        this.setState({ profile: payload })
-        break
+      // case 'whoami':
+      //   this.setState({ profile: payload })
+      //   break
       case 'replication':
         this.setState({
           replication: payload
         })
+      case 'exception':
+        if (typeof payload === 'string') {
+          alert(payload)
+        } else {
+          alert(JSON.stringify(payload))
+        }
       default:
     }
   }
