@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, TouchableHighlight, Image } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  Image,
+  Linking
+} from 'react-native'
 import TrackPlayer from 'react-native-track-player'
 import Avatar from './Avatar'
 import PlayButton from './PlayButton'
@@ -19,6 +26,9 @@ export default class FeedItem extends Component {
     TrackPlayer.setupPlayer()
       .then(async () => {
         // Adds a track to the queue
+        Linking.openURL(this.props.filePath).catch(err =>
+          console.error('An error occurred', err)
+        )
         await TrackPlayer.add({
           url: this.props.filePath,
           title: this.props.author
@@ -131,7 +141,12 @@ export default class FeedItem extends Component {
         {!isPlaying && (
           <View style={styles.container}>
             <TouchableHighlight
-              onPress={gotoProfile}
+              // onPress={gotoProfile}
+              onPress={() =>
+                Linking.openURL(image).catch(err =>
+                  console.error('An error occurred', err)
+                )
+              }
               underlayColor={'transparent'}
             >
               <Avatar source={image} />
