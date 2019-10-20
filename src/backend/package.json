@@ -29,7 +29,7 @@
     "ssb-promiscuous": "^1.1.0",
     "ssb-ref": "^2.13.9",
     "ssb-replicate": "^1.3.0",
-    "ssb-serve-blobs": "^2.1.0",
+    "ssb-serve-blobs": "github:luandro/ssb-serve-blobs",
     "ssb-threads": "^3.6.0",
     "staltz-multiserver": "^3.3.6-1"
   },

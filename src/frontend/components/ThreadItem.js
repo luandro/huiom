@@ -4,7 +4,7 @@ import Message from './Message'
 import Avatar from './Avatar'
 import colors from '../lib/colors'
 
-export default ({ messages, navigate, root, branch }) => {
+export default ({ messages, navigate, root, branch, ip }) => {
   if (messages[0]) {
     const { author, content, timestamp } = messages[0].value
     // const userList = messages
@@ -25,12 +25,13 @@ export default ({ messages, navigate, root, branch }) => {
         }}
       >
         <Message
+          ip={ip}
           roundTop
           roundBottom={messages.length < 2}
           borderBottom={messages.length > 1}
           author={author}
           image={content.image}
-          filePath={`http://localhost:26835/${content.blob}`}
+          filePath={`http://${ip}:26835/${content.blob}`}
           duration={content.duration}
           timestamp={timestamp}
           gotoProfile={() => navigate('Profile', { id: author })}
@@ -104,9 +105,10 @@ export default ({ messages, navigate, root, branch }) => {
           <Message
             borderTop
             roundBottom
+            ip={ip}
             author={messages[messages.length - 1].value.author}
             image={messages[messages.length - 1].value.content.image}
-            filePath={`http://localhost:26835/${
+            filePath={`http://${ip}:26835/${
               messages[messages.length - 1].value.content.blob
             }`}
             duration={messages[messages.length - 1].value.content.duration}

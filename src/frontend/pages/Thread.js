@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, FlatList } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
-import FeedItem from '../components/Message'
+import Message from '../components/Message'
 import ActionButton from '../components/ActionButton'
 import { getFeed } from '../lib/utils'
 
@@ -13,7 +13,8 @@ export default class Thread extends Component {
       isLoading: false,
       feedUpdatedAt: null,
       replicatedAt: null,
-      replication: null
+      replication: null,
+      ip: ''
     }
     this.reducer.bind(this)
   }
@@ -22,6 +23,12 @@ export default class Thread extends Component {
       route: { params }
     } = this.props
     getFeed(params.root)
+    wifi.getIP(ip => {
+      console.log(ip)
+      this.setState({
+        ip
+      })
+    })
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
   }
 
@@ -74,7 +81,7 @@ export default class Thread extends Component {
       navigation,
       route: { params }
     } = this.props
-    const { isLoading, feed } = this.state
+    const { isLoading, feed, ip } = this.state
     return (
       <View style={{ flex: 1, width: '100%' }}>
         {feed && (
@@ -87,13 +94,14 @@ export default class Thread extends Component {
               const branch = item.key
               const { author, content, timestamp } = item.value
               return (
-                <FeedItem
+                <Message
                   roundTop
+                  ip={ip}
                   roundBottom
                   margin
                   author={author}
                   image={content.image}
-                  filePath={`http://localhost:26835/${content.blob}`}
+                  filePath={`http://${ip}:26835/${content.blob}`}
                   duration={content.duration}
                   timestamp={timestamp}
                   responses={3}

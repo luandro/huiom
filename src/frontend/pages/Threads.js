@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, FlatList, Image, ActivityIndicator } from 'react-native'
 import nodejs from 'nodejs-mobile-react-native'
 import AsyncStorage from '@react-native-community/async-storage'
+import wifi from 'react-native-android-wifi'
 import ThreadItem from '../components/ThreadItem'
 import ActionButton from '../components/ActionButton'
 import { getFeed } from '../lib/utils'
@@ -16,7 +17,8 @@ class Threads extends Component {
       isLoading: false,
       feedUpdatedAt: null,
       replicatedAt: null,
-      replication: null
+      replication: null,
+      ip: ''
     }
     this.reducer.bind(this)
   }
@@ -27,6 +29,12 @@ class Threads extends Component {
       feed: cacheFeed
     })
     getFeed()
+    wifi.getIP(ip => {
+      console.log(ip)
+      this.setState({
+        ip
+      })
+    })
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
   }
 
@@ -95,7 +103,7 @@ class Threads extends Component {
     const { navigation } = this.props
     // const isFocused = navigation.isFocused()
     // console.log('isFocused', isFocused)
-    const { isLoading, firstLoad, feed } = this.state
+    const { isLoading, firstLoad, feed, ip } = this.state
     const animation = !feed || (feed.length === 0 && firstLoad)
     return (
       <View
@@ -129,6 +137,7 @@ class Threads extends Component {
                   navigate={navigation.navigate}
                   root={branch}
                   branch={branch}
+                  ip={ip}
                 />
               )
             }}

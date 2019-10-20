@@ -30,11 +30,8 @@ const mutateMsgWithExtras = sbot => {
       })
       return cb(error)
     }
-    commit({
-      type: 'exception',
-      payload: 'Success on getting image ' + toUrl(image)
-    })
-    msg.value.content.image = toUrl(image)
+    let imgUrl = toUrl(image)
+    msg.value.content.image = image
     cb(null, msg)
   }
 }

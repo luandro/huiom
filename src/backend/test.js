@@ -39,7 +39,10 @@ module.exports = sbot => {
         pull.take(1),
         pull.collect(async (err, threads) => {
           if (err) return console.error(err)
-          console.log('Done 0-0000-----------000', threads)
+          console.log(
+            'Done 0-0000-----------000',
+            threads[0].messages[0].value.content
+          )
         })
       )
     })
