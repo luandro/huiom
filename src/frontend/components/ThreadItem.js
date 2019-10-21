@@ -25,6 +25,7 @@ export default ({ messages, navigate, root, branch, ip }) => {
         }}
       >
         <Message
+          navigate={navigate}
           ip={ip}
           roundTop
           roundBottom={messages.length < 2}

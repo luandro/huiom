@@ -60,7 +60,8 @@ export default class FeedItem extends Component {
       roundBottom,
       borderTop,
       borderBottom,
-      ip
+      ip,
+      navigate
     } = this.props
     const { isPlaying, error, position } = this.state
     const publishedAt = new Date(timestamp).toLocaleDateString()
@@ -133,7 +134,8 @@ export default class FeedItem extends Component {
         {!isPlaying && (
           <View style={styles.container}>
             <TouchableHighlight
-              onPress={gotoProfile}
+              // onPress={gotoProfile}
+              onPress={() => navigate('Debug', { blob: image })}
               underlayColor={'transparent'}
             >
               <Avatar source={`http://${ip}:26835/${image}`} />

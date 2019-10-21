@@ -11,6 +11,7 @@ import Profile from '../pages/Profile'
 import Thread from '../pages/Thread'
 import Threads from '../pages/Threads'
 import Record from '../pages/Record'
+import Debug from '../pages/Debug'
 import Connections from './Connections'
 import Wifi from './Wifi'
 
@@ -168,6 +169,13 @@ class App extends Component {
               component={Thread}
               options={{
                 headerTitle: ''
+              }}
+            />
+            <MainStack.Screen
+              name='Debug'
+              component={Debug}
+              options={{
+                headerTitle: 'Debug page'
               }}
             />
           </MainStack.Navigator>
