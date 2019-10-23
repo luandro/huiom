@@ -100,6 +100,11 @@ export default class Connections extends Component {
   render () {
     const { wifiStatus, isConnected } = this.state
     const { profile } = this.props
+    let hideProfile = true
+    if (profile) {
+      hideProfile = profile.name && profile.image
+    }
+
     return (
       <View
         style={{
@@ -139,7 +144,7 @@ export default class Connections extends Component {
             </View>
           </TouchableHighlight>
         )}
-        {profile && !profile.image && !profile.name && (
+        {!hideProfile && (
           <TouchableHighlight
             onPress={this.props.editProfile}
             underlayColor={'transparent'}
