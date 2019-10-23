@@ -99,6 +99,7 @@ export default class Connections extends Component {
 
   render () {
     const { wifiStatus, isConnected } = this.state
+    const { profile } = this.props
     return (
       <View
         style={{
@@ -138,24 +139,26 @@ export default class Connections extends Component {
             </View>
           </TouchableHighlight>
         )}
-        <TouchableHighlight
-          onPress={this.props.editProfile}
-          underlayColor={'transparent'}
-        >
-          <View
-            style={{
-              height: 35,
-              width: 35,
-              borderRadius: 35,
-              paddingTop: 7,
-              marginLeft: 10,
-              backgroundColor: colors.color1,
-              alignItems: 'center'
-            }}
+        {profile && !profile.image && !profile.name && (
+          <TouchableHighlight
+            onPress={this.props.editProfile}
+            underlayColor={'transparent'}
           >
-            <Text style={{ color: colors.light }}>P</Text>
-          </View>
-        </TouchableHighlight>
+            <View
+              style={{
+                height: 35,
+                width: 35,
+                borderRadius: 35,
+                paddingTop: 7,
+                marginLeft: 10,
+                backgroundColor: colors.color1,
+                alignItems: 'center'
+              }}
+            >
+              <Text style={{ color: colors.light }}>P</Text>
+            </View>
+          </TouchableHighlight>
+        )}
       </View>
     )
   }

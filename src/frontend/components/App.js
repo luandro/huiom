@@ -94,7 +94,7 @@ class App extends Component {
   }
   render () {
     // console.log('FEED', feed)
-    const { replicating } = this.state
+    const { replicating, profile } = this.state
     return (
       <View style={{ flexGrow: 1 }}>
         {replicating && (
@@ -135,7 +135,10 @@ class App extends Component {
                   />
                 ),
                 headerRight: () => (
-                  <Wifi editProfile={() => navigateRoot('ProfileModal')} />
+                  <Wifi
+                    profile={profile}
+                    editProfile={() => navigateRoot('ProfileModal')}
+                  />
                 )
               }}
             />
