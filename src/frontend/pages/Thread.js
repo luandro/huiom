@@ -93,7 +93,7 @@ export default class Thread extends Component {
                   margin
                   author={author}
                   image={content.image}
-                  filePath={`http://localhost:26835/${content.blob}`}
+                  filePath={content.audio}
                   duration={content.duration}
                   timestamp={timestamp}
                   responses={3}

@@ -5,7 +5,7 @@ const pullParaMap = require('pull-paramap')
 const fs = require('fs')
 const { isAudio } = require('ssb-audio-schema')
 const toUrl = require('ssb-serve-blobs/id-to-url')
-const { commit, getImage, getName, threadWithImage } = require('./utils')
+const { commit, getImage, getName, threadWithExtras } = require('./utils')
 
 // const getAccFile = filePath => filePath.split('.opus')[0] + '.aac'
 
@@ -71,7 +71,7 @@ module.exports = (sbot, appDataDir) => {
               root: payload,
               allowlist: ['audio']
             }),
-            pull.asyncMap(threadWithImage(sbot)),
+            pull.asyncMap(threadWithExtras(sbot)),
             pull.collect((err, data) => {
               if (err) return console.error(err)
               console.log('DATA =====>', data)
@@ -85,7 +85,7 @@ module.exports = (sbot, appDataDir) => {
               reverse: true,
               allowlist: ['audio']
             }),
-            pull.asyncMap(threadWithImage(sbot)),
+            pull.asyncMap(threadWithExtras(sbot)),
             pull.collect((err, data) => {
               if (err) return console.error(err)
               console.log('DATA =====>', data)

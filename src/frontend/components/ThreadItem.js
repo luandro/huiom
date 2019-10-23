@@ -30,7 +30,7 @@ export default ({ messages, navigate, root, branch }) => {
           borderBottom={messages.length > 1}
           author={author}
           image={content.image}
-          filePath={`http://localhost:26835/${content.blob}`}
+          filePath={content.audio}
           duration={content.duration}
           timestamp={timestamp}
           gotoProfile={() => navigate('Profile', { id: author })}
@@ -106,9 +106,7 @@ export default ({ messages, navigate, root, branch }) => {
             roundBottom
             author={messages[messages.length - 1].value.author}
             image={messages[messages.length - 1].value.content.image}
-            filePath={`http://localhost:26835/${
-              messages[messages.length - 1].value.content.blob
-            }`}
+            filePath={messages[messages.length - 1].value.content.audio}
             duration={messages[messages.length - 1].value.content.duration}
             timestamp={messages[messages.length - 1].value.timestamp}
             gotoProfile={() =>

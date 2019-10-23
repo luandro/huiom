@@ -1,6 +1,6 @@
 const pull = require('pull-stream')
 // const pullParaMap = require('pull-paramap')
-const { getImage, threadWithImage } = require('./utils')
+const { getImage, threadWithExtras } = require('./utils')
 const toUrl = require('ssb-serve-blobs/id-to-url')
 
 module.exports = sbot => {
@@ -8,12 +8,10 @@ module.exports = sbot => {
   console.log('Publishing')
   const testType = 'audio-test-97'
   const contentRoot = {
-    type: 'test',
     type: testType
   }
   sbot.publish(contentRoot, (err, valueRoot) => {
     const contentBranch = {
-      type: 'test',
       type: testType,
       root: valueRoot.key,
       branch: valueRoot.key
@@ -25,21 +23,21 @@ module.exports = sbot => {
       }
       pull(
         // sbot.messagesByType({ type: testType, reverse: true }),
-        // sbot.threads.public({
-        //   limit: 100, // how many threads at most
-        //   reverse: true, // threads sorted from most recent to least recent
-        //   allowlist: [testType]
-        // }),
-        sbot.threads.thread({
-          limit: 100,
-          root: valueRoot.key,
+        sbot.threads.public({
+          limit: 100, // how many threads at most
+          reverse: true, // threads sorted from most recent to least recent
           allowlist: [testType]
         }),
-        pull.asyncMap(threadWithImage(sbot)),
+        // sbot.threads.thread({
+        //   limit: 100,
+        //   root: valueRoot.key,
+        //   allowlist: [testType]
+        // }),
+        pull.asyncMap(threadWithExtras(sbot)),
         pull.take(1),
         pull.collect(async (err, threads) => {
           if (err) return console.error(err)
-          console.log('Done 0-0000-----------000', threads)
+          console.log('Done 0-0000-----------000', threads[0].messages[0])
         })
       )
     })

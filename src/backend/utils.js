@@ -12,6 +12,9 @@ const getName = (sbot, feedId, cb) => {
 const mutateMsgWithExtras = sbot => {
   const getAbout = sbot.about.socialValue
   return async (msg, cb) => {
+    if (msg.value.content.type === 'audio' && msg.value.content.blob) {
+      msg.value.content.audio = toUrl(msg.value.content.blob)
+    }
     const nameOpts = { key: 'image', dest: msg.value.author }
     const [error, image] = await runAsync(getAbout)(nameOpts)
     if (error) return cb(error)
@@ -31,7 +34,7 @@ module.exports = {
   },
   getImage,
   getName,
-  threadWithImage: sbot => {
+  threadWithExtras: sbot => {
     return async (thread, cb) => {
       for (const msg of thread.messages) {
         await runAsync(mutateMsgWithExtras(sbot))(msg)
