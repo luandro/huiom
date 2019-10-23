@@ -15,10 +15,16 @@ const mutateMsgWithExtras = sbot => {
     if (msg.value.content.type === 'audio' && msg.value.content.blob) {
       msg.value.content.audio = toUrl(msg.value.content.blob)
     }
-    const nameOpts = { key: 'image', dest: msg.value.author }
-    const [error, image] = await runAsync(getAbout)(nameOpts)
+    if (msg.value.content.type === 'contact') {
+      const contactImageOpts = { key: 'image', dest: msg.value.content.contact }
+      const [error, contactImage] = await runAsync(getAbout)(contactImageOpts)
+      if (error) return cb(error)
+      msg.value.content.contactImage = contactImage ? toUrl(contactImage) : null
+    }
+    const imageOpts = { key: 'image', dest: msg.value.author }
+    const [error, image] = await runAsync(getAbout)(imageOpts)
     if (error) return cb(error)
-    msg.value.content.image = toUrl(image)
+    msg.value.content.image = image ? toUrl(image) : null
     cb(null, msg)
   }
 }

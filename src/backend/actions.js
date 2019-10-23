@@ -74,7 +74,6 @@ module.exports = (sbot, appDataDir) => {
             pull.asyncMap(threadWithExtras(sbot)),
             pull.collect((err, data) => {
               if (err) return console.error(err)
-              console.log('DATA =====>', data)
               commit({ type: 'feed', payload: data })
             })
           )
@@ -88,13 +87,27 @@ module.exports = (sbot, appDataDir) => {
             pull.asyncMap(threadWithExtras(sbot)),
             pull.collect((err, data) => {
               if (err) return console.error(err)
-              console.log('DATA =====>', data)
               commit({ type: 'feed', payload: data })
             })
           )
         }
         break
 
+      case 'getProfileFeed':
+        pull(
+          sbot.threads.profile({
+            id: payload,
+            limit: 100,
+            reverse: true,
+            allowlist: ['audio', 'about', 'contact']
+          }),
+          pull.asyncMap(threadWithExtras(sbot)),
+          pull.collect((err, data) => {
+            if (err) return console.error(err)
+            commit({ type: 'profileFeed', payload: data })
+          })
+        )
+        break
       case 'whoami':
         getName(sbot, sbot.id, (nameErr, name) => {
           if (nameErr) return console.error('ssb:', nameErr)

@@ -10,6 +10,9 @@ export const about = payload => dispatch({ type: 'about', payload })
 
 export const getFeed = payload => dispatch({ type: 'getFeed', payload })
 
+export const getProfileFeed = payload =>
+  dispatch({ type: 'getProfileFeed', payload })
+
 export const publishAudio = payload =>
   dispatch({
     type: 'publishAudioFile',
