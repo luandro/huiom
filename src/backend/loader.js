@@ -11,9 +11,13 @@ if (!process.env.DESKTOP) {
   os.homedir = () => nodejsProjectDir
   process.cwd = () => nodejsProjectDir
   // Force libsodium to use a WebAssembly implementation
+  process.env = process.env || {}
+  process.env.CHLORIDE_JS = 'yes'
+  rnBridge.channel.on('start', externalPath => {
+    process.env.EXTERNAL_PATH = externalPath
+    require('./server')
+  })
+} else {
+  process.env.EXTERNAL_PATH = '/tmp/'
+  require('./server')
 }
-
-process.env = process.env || {}
-process.env.CHLORIDE_JS = 'yes'
-
-require('./server')

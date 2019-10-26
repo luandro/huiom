@@ -30,6 +30,12 @@ const mutateMsgWithExtras = sbot => {
 }
 
 module.exports = {
+  sendStarted: msg => {
+    if (!process.env.DESKTOP) {
+      const bridge = require('rn-bridge')
+      bridge.channel.post('started', msg)
+    }
+  },
   commit: mutation => {
     // used for sending mutations to front end state machines
     // mutation should be of form { type, payload? }

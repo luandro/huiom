@@ -5,6 +5,9 @@ export const dispatch = action => {
   nodejs.channel.post('action', action)
 }
 
+export const startWithExternal = externalPath =>
+  nodejs.channel.post('start', externalPath)
+
 export const whoami = () => dispatch({ type: 'whoami' })
 export const about = payload => dispatch({ type: 'about', payload })
 

@@ -4,16 +4,21 @@ const mkdirp = require('mkdirp')
 const caps = require('ssb-caps')
 const Config = require('ssb-config/inject')
 const fs = require('fs')
+const { sendStarted } = require('./utils')
 // const rnBridge = require('rn-bridge')
 // const rnChannelPlugin = require('multiserver-rn-channel')
 // const NoauthTransformPlugin = require('multiserver/plugins/noauth')
 let appDataDir
 
-if (!process.env.DESKTOP) {
-  const bridge = require('rn-bridge')
-  appDataDir = bridge.app.datadir()
+if (process.env.EXTERNAL_PATH) {
+  appDataDir = process.env.EXTERNAL_PATH
 } else {
-  appDataDir = '/tmp/.ssb-test/'
+  if (!process.env.DESKTOP) {
+    const bridge = require('rn-bridge')
+    appDataDir = bridge.app.datadir()
+  } else {
+    appDataDir = '/tmp/.ssb-test/'
+  }
 }
 
 const ssbPath = path.resolve(appDataDir, '.ssb')
@@ -83,6 +88,7 @@ const sbot = require('secret-stack')(ssConfig) // eslint-disable-line
 if (!process.env.DESKTOP) {
   require('./actions')(sbot, appDataDir)
   require('./streams')(sbot, appDataDir)
+  sendStarted('Started Secure Scuttlebutt on: ', ssbPath)
   // NOTE could send a message to front-end saying "READY"
   // to tell UI it's sage to launch + start requesting things
 } else {

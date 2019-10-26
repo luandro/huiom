@@ -5,7 +5,8 @@ import { useNavigation } from '@react-navigation/core'
 import { NavigationNativeContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import SplashScreen from 'react-native-splash-screen'
-import { whoami, getFeed } from '../lib/utils'
+import fs from 'react-native-fs'
+import { startWithExternal, whoami, getFeed } from '../lib/utils'
 import EditProfile from '../pages/EditProfile'
 import Profile from '../pages/Profile'
 import Thread from '../pages/Thread'
@@ -46,12 +47,33 @@ class App extends Component {
   async componentDidMount () {
     SplashScreen.hide()
     nodejs.start('loader.js')
+    try {
+      const externalDirs = await fs.getAllExternalFilesDirs()
+      // const ExternalDirectoryPath = await fs.ExternalDirectoryPath()
+      // const ExternalStorageDirectoryPath = await fs.ExternalStorageDirectoryPath()
+      alert(externalDirs)
+      console.log('getAllExternalFilesDirs ', externalDirs)
+      // console.log('ExternalDirectoryPath ', ExternalDirectoryPath)
+      // console.log('ExternalStorageDirectoryPath ', ExternalStorageDirectoryPath)
+      const externalStorage = externalDirs[0]
+      startWithExternal(externalStorage)
+    } catch (err) {
+      console.log('ERROR', err)
+    }
     whoami()
     this.listener = nodejs.channel.addListener('mutation', this.reducer, this)
+    this.startListener = nodejs.channel.addListener(
+      'started',
+      msg => {
+        alert(msg)
+      },
+      this
+    )
   }
 
   componentWillUnmount () {
-    this.listener.remove() // solves setState on unmounted components!
+    this.listener.remove()
+    this.startListener.remove() // solves setState on unmounted components!
   }
 
   componentDidUpdate (prevProps, prevState) {
