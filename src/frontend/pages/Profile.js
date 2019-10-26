@@ -1,6 +1,6 @@
 import React, { Component, useRef } from 'react'
 import {
-  ScrollView,
+  SafeAreaView,
   View,
   Text,
   Image,
@@ -62,49 +62,47 @@ export default class Profile extends Component {
     const { navigation } = this.props
     return (
       <View>
-        <ScrollView contentInsetAdjustmentBehavior='automatic'>
-          <View style={{ padding: 5 }}>
-            {image && <Image style={styles.image} source={{ uri: image }} />}
-            <Text style={styles.title}>{name}</Text>
-          </View>
-          {feed && (
-            <FlatList
-              refreshing={isLoadingFeed}
-              // onRefresh={this.handleRefresh}
-              data={feed}
-              ListFooterComponent={<View style={{ margin: 50 }} />}
-              renderItem={({ item }) => {
-                if (item.messages[0].value.content.type === 'about') {
-                  return (
-                    <AboutMessage
-                      navigate={navigation.navigate}
-                      {...item.messages[0].value.content}
-                    />
-                  )
-                } else if (item.messages[0].value.content.type === 'contact') {
-                  return (
-                    <ContactMessage
-                      navigate={navigation.navigate}
-                      {...item.messages[0].value.content}
-                    />
-                  )
-                } else {
-                  const branch = item.messages[0] ? item.messages[0].key : null
-                  return (
-                    <ThreadItem
-                      messages={item.messages}
-                      navigate={navigation.navigate}
-                      root={branch}
-                      branch={branch}
-                    />
-                  )
-                }
-              }}
-              style={{ padding: 10 }}
-              keyExtractor={(item, index) => index.toString()}
-            />
+        <FlatList
+          ListHeaderComponent={props => (
+            <View style={{ padding: 5 }}>
+              {image && <Image style={styles.image} source={{ uri: image }} />}
+              <Text style={styles.title}>{name}</Text>
+            </View>
           )}
-        </ScrollView>
+          refreshing={isLoadingFeed}
+          // onRefresh={this.handleRefresh}
+          data={feed || []}
+          ListFooterComponent={<View style={{ margin: 50 }} />}
+          renderItem={({ item }) => {
+            if (item.messages[0].value.content.type === 'about') {
+              return (
+                <AboutMessage
+                  navigate={navigation.navigate}
+                  {...item.messages[0].value.content}
+                />
+              )
+            } else if (item.messages[0].value.content.type === 'contact') {
+              return (
+                <ContactMessage
+                  navigate={navigation.navigate}
+                  {...item.messages[0].value.content}
+                />
+              )
+            } else {
+              const branch = item.messages[0] ? item.messages[0].key : null
+              return (
+                <ThreadItem
+                  messages={item.messages}
+                  navigate={navigation.navigate}
+                  root={branch}
+                  branch={branch}
+                />
+              )
+            }
+          }}
+          style={{ padding: 10 }}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
     )
   }
