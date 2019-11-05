@@ -60,3 +60,8 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+
+
+# workaround for react-native-cli bug
+!node_modules/@react-native-community/cli-platform-android/native_modules.gradle
